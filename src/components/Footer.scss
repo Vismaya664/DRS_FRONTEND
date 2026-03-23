@@ -1,0 +1,196 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
+
+// ── Variables ──────────────────────────────────────────────────────────────
+$dark:        #0c1a0e;
+$green:       #1a4d24;
+$green-light: #22c55e;
+$white:       #ffffff;
+$text-muted:  rgba(255, 255, 255, 0.40);
+$text-body:   rgba(255, 255, 255, 0.65);
+
+// ── Footer shell ──────────────────────────────────────────────────────────
+.footer {
+  position: relative;
+  background: linear-gradient(135deg, $dark 0%, #0d2116 50%, $green 100%);
+  overflow: hidden;
+  font-family: 'DM Sans', sans-serif;
+  border-radius: 32px 32px 0 0;
+  margin: 0 24px;
+
+  @media (max-width: 640px) { margin: 0 12px; border-radius: 24px 24px 0 0; }
+}
+
+// ── Watermark ─────────────────────────────────────────────────────────────
+.footer-watermark {
+  position: absolute;
+  top: 0;
+  left: -8px;
+  right: 0;
+  font-family: 'DM Sans', sans-serif;
+  font-size: clamp(5rem, 14vw, 11rem);
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.05);
+  line-height: 1;
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+  animation: textReveal 5s ease-in-out infinite alternate;
+}
+
+@keyframes textReveal {
+  0%   { letter-spacing: 0.04em; color: rgba(255, 255, 255, 0.04); }
+  100% { letter-spacing: 0.14em; color: rgba(34, 197, 94, 0.12); }
+}
+
+// ── Inner content ─────────────────────────────────────────────────────────
+.footer-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 52px 56px 32px;
+
+  @media (max-width: 768px) { padding: 40px 28px 24px; }
+  @media (max-width: 480px) { padding: 32px 20px 20px; }
+}
+
+// ── Logo row ──────────────────────────────────────────────────────────────
+.footer-logo-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.footer-logo {
+  width: 44px;
+  height: 44px;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.40);
+  flex-shrink: 0;
+}
+
+.footer-brand-name {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: $white;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+
+  em {
+    display: block;
+    font-style: normal;
+    font-weight: 400;
+    color: $green-light;
+    font-size: 0.80rem;
+  }
+}
+
+.footer-socials {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.footer-social {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: $text-body;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s, transform 0.2s;
+
+  svg { width: 15px; height: 15px; }
+
+  &:hover {
+    background: rgba(34, 197, 94, 0.15);
+    border-color: rgba(34, 197, 94, 0.30);
+    color: $green-light;
+    transform: translateY(-2px);
+  }
+}
+
+// ── Divider ───────────────────────────────────────────────────────────────
+.footer-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  margin-bottom: 22px;
+}
+
+// ── Contact label ─────────────────────────────────────────────────────────
+.footer-contact-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: $text-muted;
+  margin: 0 0 16px;
+}
+
+// ── Contact row — single horizontal line like screenshot ──────────────────
+.footer-contact-row {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 20px 36px;
+  margin-bottom: 28px;
+}
+
+.footer-contact-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: $text-body;
+  font-size: 0.82rem;
+  font-weight: 400;
+  line-height: 1.5;
+
+  svg {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    color: $green-light;
+    opacity: 0.80;
+  }
+
+  span { color: $text-body; }
+}
+
+// ── Copyright ─────────────────────────────────────────────────────────────
+.footer-copy {
+  font-size: 0.78rem;
+  color: $text-muted;
+  margin: 0;
+  text-align: center;
+  padding-bottom: 8px;
+}
+
+// ── Responsive ────────────────────────────────────────────────────────────
+@media (max-width: 640px) {
+  .footer-contact-row {
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .footer-logo-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

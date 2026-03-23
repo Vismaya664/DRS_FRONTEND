@@ -1,0 +1,297 @@
+import { useState, useMemo } from "react";
+import "../../style/Doctordashboard/Appointments.scss";
+import Doctorssidebar from "../../components/doctorssidebar";
+
+const SearchIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+    <circle cx="6.5" cy="6.5" r="4.5"/><path d="M10.5 10.5l3 3"/>
+  </svg>
+);
+const FilterIcon = () => (
+  <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M1 2h12l-4.5 5.5V12l-3-1.5V7.5L1 2z"/>
+  </svg>
+);
+const ExportIcon = () => (
+  <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M7 1v8M4 6l3 3 3-3"/><path d="M2 10v2a1 1 0 001 1h8a1 1 0 001-1v-2"/>
+  </svg>
+);
+const EditIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M9.5 2.5l2 2L4 12H2v-2L9.5 2.5z"/>
+  </svg>
+);
+const EyeIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+    <path d="M1 7C2.5 4 4.5 2.5 7 2.5S11.5 4 13 7c-1.5 3-3.5 4.5-6 4.5S2.5 10 1 7z"/>
+    <circle cx="7" cy="7" r="1.8"/>
+  </svg>
+);
+const TrashIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M2 3.5h10M5 3.5V2h4v1.5M5.5 6v4M8.5 6v4M3 3.5l.7 8a1 1 0 001 .9h4.6a1 1 0 001-.9l.7-8"/>
+  </svg>
+);
+const ChevLeftIcon = () => (
+  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+    <path d="M8 2L4 6l4 4"/>
+  </svg>
+);
+const ChevRightIcon = () => (
+  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+    <path d="M4 2l4 4-4 4"/>
+  </svg>
+);
+const EmptyIcon = () => (
+  <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="8" y="6" width="32" height="36" rx="3"/>
+    <path d="M16 16h16M16 22h16M16 28h10"/>
+    <circle cx="36" cy="36" r="8" fill="white" stroke="currentColor"/>
+    <path d="M33 36h6M36 33v6"/>
+  </svg>
+);
+
+const APPOINTMENTS_DATA = [
+  { id:  1, name: "Amal Kumar",       phone: "7826810900", email: "amal@email.com",       dept: "DERMATOLOGY",   apptDate: "3/12/2026", apptTime: "10:00:00 AM", status: "pending",    bookedOn: "3/10/2026" },
+  { id:  2, name: "Sarah Mitchell",   phone: "9845612300", email: "sarah.m@email.com",    dept: "CARDIOLOGY",    apptDate: "3/12/2026", apptTime: "11:00:00 AM", status: "confirmed",  bookedOn: "3/09/2026" },
+  { id:  3, name: "Robert Chen",      phone: "8123456789", email: "robert.c@email.com",   dept: "NEUROLOGY",     apptDate: "3/12/2026", apptTime: "12:30:00 PM", status: "completed",  bookedOn: "3/08/2026" },
+  { id:  4, name: "Maria Gonzalez",   phone: "7712345678", email: "N/A",                  dept: "ORTHOPEDICS",   apptDate: "3/13/2026", apptTime: "09:00:00 AM", status: "confirmed",  bookedOn: "3/10/2026" },
+  { id:  5, name: "James Warren",     phone: "9900112233", email: "james.w@email.com",    dept: "CARDIOLOGY",    apptDate: "3/13/2026", apptTime: "02:00:00 PM", status: "pending",    bookedOn: "3/11/2026" },
+  { id:  6, name: "Emily Clark",      phone: "8866554433", email: "emily.c@email.com",    dept: "PEDIATRICS",    apptDate: "3/13/2026", apptTime: "03:30:00 PM", status: "rescheduled",bookedOn: "3/07/2026" },
+  { id:  7, name: "David Kim",        phone: "7741236900", email: "david.k@email.com",    dept: "GENERAL",       apptDate: "3/14/2026", apptTime: "10:30:00 AM", status: "confirmed",  bookedOn: "3/10/2026" },
+  { id:  8, name: "Linda Park",       phone: "9988776655", email: "linda.p@email.com",    dept: "OPHTHALMOLOGY", apptDate: "3/14/2026", apptTime: "11:30:00 AM", status: "pending",    bookedOn: "3/11/2026" },
+  { id:  9, name: "Thomas Brown",     phone: "7823001122", email: "thomas.b@email.com",   dept: "ONCOLOGY",      apptDate: "3/14/2026", apptTime: "01:00:00 PM", status: "cancelled",  bookedOn: "3/06/2026" },
+  { id: 10, name: "Priya Sharma",     phone: "8800991234", email: "priya.s@email.com",    dept: "DERMATOLOGY",   apptDate: "3/15/2026", apptTime: "09:30:00 AM", status: "completed",  bookedOn: "3/09/2026" },
+  { id: 11, name: "Kevin O'Brien",    phone: "7734561200", email: "kevin.o@email.com",    dept: "NEUROLOGY",     apptDate: "3/15/2026", apptTime: "02:30:00 PM", status: "pending",    bookedOn: "3/11/2026" },
+  { id: 12, name: "Anjali Mehta",     phone: "9812300045", email: "anjali.m@email.com",   dept: "CARDIOLOGY",    apptDate: "3/16/2026", apptTime: "10:00:00 AM", status: "confirmed",  bookedOn: "3/12/2026" },
+  { id: 13, name: "Marcus Johnson",   phone: "8877665544", email: "N/A",                  dept: "ORTHOPEDICS",   apptDate: "3/16/2026", apptTime: "11:00:00 AM", status: "pending",    bookedOn: "3/12/2026" },
+  { id: 14, name: "Fatima Al-Rashid", phone: "7700112299", email: "fatima.r@email.com",   dept: "PEDIATRICS",    apptDate: "3/17/2026", apptTime: "09:00:00 AM", status: "confirmed",  bookedOn: "3/13/2026" },
+  { id: 15, name: "Chris Thompson",   phone: "9966554411", email: "chris.t@email.com",    dept: "GENERAL",       apptDate: "3/17/2026", apptTime: "03:00:00 PM", status: "cancelled",  bookedOn: "3/10/2026" },
+];
+
+const ROWS_PER_PAGE = 20;
+
+const STATUS_COLORS = {
+  pending:     "#D97706",
+  confirmed:   "#1565D8",
+  completed:   "#16A34A",
+  cancelled:   "#DC2626",
+  rescheduled: "#7C3AED",
+};
+
+const DEPT_CLASSES = {
+  DERMATOLOGY:   "dermatology",
+  CARDIOLOGY:    "cardiology",
+  NEUROLOGY:     "neurology",
+  ORTHOPEDICS:   "orthopedics",
+  PEDIATRICS:    "pediatrics",
+  GENERAL:       "general",
+  ONCOLOGY:      "oncology",
+  OPHTHALMOLOGY: "ophthalmology",
+};
+
+export default function Appointments() {
+  const [search,       setSearch]       = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [deptFilter,   setDeptFilter]   = useState("all");
+  const [page,         setPage]         = useState(1);
+
+  const filtered = useMemo(() => {
+    let data = [...APPOINTMENTS_DATA];
+    if (search.trim()) {
+      const q = search.toLowerCase();
+      data = data.filter(r =>
+        r.name.toLowerCase().includes(q) ||
+        r.phone.includes(q) ||
+        r.email.toLowerCase().includes(q) ||
+        r.dept.toLowerCase().includes(q)
+      );
+    }
+    if (statusFilter !== "all") data = data.filter(r => r.status === statusFilter);
+    if (deptFilter   !== "all") data = data.filter(r => r.dept   === deptFilter);
+    return data;
+  }, [search, statusFilter, deptFilter]);
+
+  const totalPages = Math.ceil(filtered.length / ROWS_PER_PAGE);
+  const pageData   = filtered.slice((page - 1) * ROWS_PER_PAGE, page * ROWS_PER_PAGE);
+
+  const counts = {
+    all:         APPOINTMENTS_DATA.length,
+    pending:     APPOINTMENTS_DATA.filter(r => r.status === "pending").length,
+    confirmed:   APPOINTMENTS_DATA.filter(r => r.status === "confirmed").length,
+    completed:   APPOINTMENTS_DATA.filter(r => r.status === "completed").length,
+    cancelled:   APPOINTMENTS_DATA.filter(r => r.status === "cancelled").length,
+    rescheduled: APPOINTMENTS_DATA.filter(r => r.status === "rescheduled").length,
+  };
+
+  const uniqueDepts = [...new Set(APPOINTMENTS_DATA.map(r => r.dept))].sort();
+
+  return (
+    <div className="ap-layout">
+      <Doctorssidebar />
+      <div className="ap-page">
+
+        {/* 1️⃣ Header */}
+        <header className="ap-header">
+          <div className="ap-header__left">
+            <span className="ap-header__title">Appointments</span>
+            <span className="ap-header__count">{APPOINTMENTS_DATA.length}</span>
+          </div>
+          <div className="ap-header__right" />
+        </header>
+
+        {/* 2️⃣ Stats */}
+        <div className="ap-stats">
+          {[
+            { key: "all",         label: "All",         color: "#1A2B4B" },
+            { key: "pending",     label: "Pending",     color: STATUS_COLORS.pending     },
+            { key: "confirmed",   label: "Confirmed",   color: STATUS_COLORS.confirmed   },
+            { key: "completed",   label: "Completed",   color: STATUS_COLORS.completed   },
+            { key: "cancelled",   label: "Cancelled",   color: STATUS_COLORS.cancelled   },
+            { key: "rescheduled", label: "Rescheduled", color: STATUS_COLORS.rescheduled },
+          ].map(s => (
+            <div
+              key={s.key}
+              className={`ap-stat-item ${statusFilter === s.key ? "ap-stat-item--active" : ""}`}
+              onClick={() => { setStatusFilter(s.key); setPage(1); }}
+            >
+              <span className="ap-stat-item__dot" style={{ background: s.color }} />
+              <span className="ap-stat-item__val">{counts[s.key]}</span>
+              <span className="ap-stat-item__label">{s.label}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* 3️⃣ Toolbar */}
+        <div className="ap-toolbar">
+          <div className="ap-toolbar__left">
+            <div className="ap-search">
+              <SearchIcon />
+              <input
+                type="text"
+                placeholder="Search patient, phone, email..."
+                value={search}
+                onChange={e => { setSearch(e.target.value); setPage(1); }}
+              />
+            </div>
+            <select
+              className="ap-select"
+              value={deptFilter}
+              onChange={e => { setDeptFilter(e.target.value); setPage(1); }}
+            >
+              <option value="all">All Departments</option>
+              {uniqueDepts.map(d => <option key={d} value={d}>{d}</option>)}
+            </select>
+            <button className="ap-btn"><FilterIcon /> Filter</button>
+          </div>
+          <div className="ap-toolbar__right">
+            <button className="ap-btn"><ExportIcon /> Export</button>
+          </div>
+        </div>
+
+        {/* 4️⃣ Body */}
+        <div className="ap-body">
+          <div className="ap-table-card">
+            {pageData.length === 0 ? (
+              <div className="ap-empty">
+                <EmptyIcon />
+                <span className="ap-empty__title">No appointments found</span>
+                <span className="ap-empty__sub">Try adjusting your search or filters</span>
+              </div>
+            ) : (
+              // ✅ Scroll wrapper — horizontal scroll on smaller screens
+              <div className="ap-table-scroll">
+                <table className="ap-table">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Patient Name</th>
+                      <th>Phone Number</th>
+                      <th>Email</th>
+                      <th>Department</th>
+                      <th>Appointment Date</th>
+                      <th>Status</th>
+                      <th>Booked On</th>
+                      <th style={{ width: 90 }}>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {pageData.map((row, i) => (
+                      <tr key={row.id} style={{ animationDelay: `${i * 30}ms` }}>
+                        <td><span className="ap-id">#{row.id}</span></td>
+                        <td>
+                          <div className="ap-patient-cell">
+                            <div className="ap-patient-avatar">{row.name.charAt(0).toUpperCase()}</div>
+                            <span className="ap-patient-name">{row.name}</span>
+                          </div>
+                        </td>
+                        <td><span className="ap-phone">{row.phone}</span></td>
+                        <td>
+                          {row.email === "N/A"
+                            ? <span style={{ color: "var(--ap-text-muted)" }}>N/A</span>
+                            : <a href={`mailto:${row.email}`} className="ap-email">{row.email}</a>
+                          }
+                        </td>
+                        <td><span className={`ap-dept ap-dept--${DEPT_CLASSES[row.dept] || "general"}`}>{row.dept}</span></td>
+                        <td><div className="ap-date">{row.apptDate}, {row.apptTime}</div></td>
+                        <td>
+                          <span className={`ap-status ap-status--${row.status}`}>
+                            <span className="ap-status__dot" />
+                            {row.status.charAt(0).toUpperCase() + row.status.slice(1)}
+                          </span>
+                        </td>
+                        <td><span className="ap-booked">{row.bookedOn}</span></td>
+                        <td>
+                          <div className="ap-row-actions">
+                            <button className="ap-row-btn" title="View"><EyeIcon /></button>
+                            <button className="ap-row-btn" title="Edit"><EditIcon /></button>
+                            <button className="ap-row-btn" title="Delete"><TrashIcon /></button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* 5️⃣ Pagination */}
+        {filtered.length > 0 && (
+          <div className="ap-pagination">
+            <span className="ap-pagination__info">
+              Showing {Math.min((page - 1) * ROWS_PER_PAGE + 1, filtered.length)}–{Math.min(page * ROWS_PER_PAGE, filtered.length)} of {filtered.length} appointments
+            </span>
+            <div className="ap-pagination__controls">
+              <button className="ap-page-btn" disabled={page === 1} onClick={() => setPage(p => p - 1)}>
+                <ChevLeftIcon />
+              </button>
+              {Array.from({ length: totalPages }, (_, i) => i + 1)
+                .filter(p => p === 1 || p === totalPages || Math.abs(p - page) <= 1)
+                .reduce((acc, p, idx, arr) => {
+                  if (idx > 0 && p - arr[idx - 1] > 1) acc.push("...");
+                  acc.push(p);
+                  return acc;
+                }, [])
+                .map((p, i) =>
+                  p === "..." ? (
+                    <span key={`e${i}`} style={{ padding: "0 4px", color: "var(--ap-text-muted)", fontSize: 12 }}>…</span>
+                  ) : (
+                    <button key={p} className={`ap-page-btn ${page === p ? "ap-page-btn--active" : ""}`} onClick={() => setPage(p)}>
+                      {p}
+                    </button>
+                  )
+                )}
+              <button className="ap-page-btn" disabled={page === totalPages} onClick={() => setPage(p => p + 1)}>
+                <ChevRightIcon />
+              </button>
+            </div>
+          </div>
+        )}
+
+      </div>
+    </div>
+  );
+}

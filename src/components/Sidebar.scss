@@ -1,0 +1,314 @@
+// ─── Sidebar Variables ───────────────────────────────────────────────
+$sidebar-width: 220px;
+$sidebar-bg: #0f172a;
+$sidebar-accent: #3b82f6;
+$sidebar-text: #94a3b8;
+$sidebar-text-active: #ffffff;
+$sidebar-hover-bg: rgba(255, 255, 255, 0.06);
+$sidebar-active-bg: rgba(59, 130, 246, 0.18);
+$transition: 0.2s ease;
+
+// ─── Sidebar ─────────────────────────────────────────────────────────
+.sidebar {
+  width: $sidebar-width;
+  min-width: $sidebar-width;
+  height: 100vh;
+  background: $sidebar-bg;
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  // ─── Logo ──────────────────────────────────────────────
+  &__logo {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 22px 18px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    margin-bottom: 8px;
+  }
+
+  &__logo-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    overflow: hidden;
+    flex-shrink: 0;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  }
+
+  &__logo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  &__logo-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  &__logo-name {
+    font-size: 15px;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: 0.03em;
+    line-height: 1;
+    font-family: 'Sora', 'Segoe UI', sans-serif;
+
+    sup {
+      font-size: 10px;
+      color: $sidebar-accent;
+    }
+  }
+
+  &__logo-role {
+    font-size: 10px;
+    color: $sidebar-text;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  // ─── Nav ───────────────────────────────────────────────
+  &__nav {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 4px 10px;
+    gap: 2px;
+  }
+
+  &__nav-section {
+    font-size: 9.5px;
+    font-weight: 700;
+    color: rgba(148, 163, 184, 0.45);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 14px 8px 6px;
+    margin: 0;
+  }
+
+  &__nav-item {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    width: 100%;
+    padding: 10px 12px;
+    border: none;
+    background: transparent;
+    border-radius: 9px;
+    cursor: pointer;
+    color: $sidebar-text;
+    font-size: 13.5px;
+    font-weight: 500;
+    text-align: left;
+    transition: background $transition, color $transition;
+    position: relative;
+    font-family: 'Sora', 'Segoe UI', sans-serif;
+
+    &:hover {
+      background: $sidebar-hover-bg;
+      color: #e2e8f0;
+    }
+
+    &--active {
+      background: $sidebar-active-bg;
+      color: $sidebar-text-active;
+      font-weight: 600;
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 3px;
+        height: 60%;
+        background: $sidebar-accent;
+        border-radius: 0 3px 3px 0;
+      }
+
+      .sidebar__nav-icon {
+        color: $sidebar-accent;
+      }
+    }
+  }
+
+  &__nav-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: color $transition;
+  }
+
+  &__nav-label {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  // ─── Footer ────────────────────────────────────────────
+  &__footer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 18px;
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    margin-top: auto;
+  }
+
+  &__footer-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #3b82f6, #7c3aed);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+    letter-spacing: 0.03em;
+  }
+
+  &__footer-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow: hidden;
+  }
+
+  &__footer-name {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #e2e8f0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__footer-role {
+    font-size: 10px;
+    color: $sidebar-text;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 500;
+  }
+}
+
+// ─── Hamburger Toggle Button (mobile only) ───────────────────────────────────
+.sidebar-toggle {
+  display: none;
+  position: fixed;
+  top: 10px;
+  left: 14px;
+  z-index: 300;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: #0f172a;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #94a3b8;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  transition: background 0.2s, color 0.2s;
+
+  &:hover {
+    background: #1e293b;
+    color: #fff;
+  }
+}
+
+// ─── Overlay backdrop ────────────────────────────────────────────────────────
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 199;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+
+// ─── Close button inside sidebar (mobile only) ───────────────────────────────
+.sidebar__close {
+  display: none;
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #94a3b8;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, color 0.2s;
+  flex-shrink: 0;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.13);
+    color: #fff;
+  }
+}
+
+// ─── Mobile Responsive ───────────────────────────────────────────────────────
+@media (max-width: 768px) {
+
+  // Show hamburger toggle
+  .sidebar-toggle {
+    display: flex;
+  }
+
+  // Show overlay when sidebar is open
+  .sidebar-overlay--open {
+    display: block;
+  }
+
+  // Sidebar slides in from the left as a drawer
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 200;
+    transform: translateX(-100%);
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.25s ease;
+    box-shadow: none;
+
+    // Open state
+    &--open {
+      transform: translateX(0);
+      box-shadow: 4px 0 32px rgba(0, 0, 0, 0.45);
+    }
+
+    // Show close button inside sidebar on mobile
+    &__close {
+      display: flex;
+    }
+
+    // Adjust logo padding to make room for close button
+    &__logo {
+      padding-right: 50px;
+    }
+  }
+}

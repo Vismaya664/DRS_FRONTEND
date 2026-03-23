@@ -1,0 +1,646 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=DM+Serif+Display:ital@0;1&family=Playfair+Display:wght@400;500;600&display=swap');
+
+// ── Palette ────────────────────────────────────────────────────────────────
+$green-dark:  #2e7d32;
+$green-btn:   #388e3c;
+$white:       #ffffff;
+$dark:        #111827;
+$orange:      #e84c0e;
+$orange-dark: #c43c06;
+
+// ════════════════════════════════════════════════════════════════════════════
+// ── 1. Hero Banner
+// ════════════════════════════════════════════════════════════════════════════
+
+.home-hero {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  min-height: 640px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    160deg,
+    rgba(0, 0, 0, 0.62) 0%,
+    rgba(0, 0, 0, 0.45) 50%,
+    rgba(0, 0, 0, 0.30) 100%
+  );
+  z-index: 0;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 100px 24px 80px;
+  max-width: 860px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.hero-trusted {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.1rem;
+  font-weight: 400;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.75);
+  margin: 0 0 16px;
+  letter-spacing: 0.03em;
+  animation: fadeUp 0.5s ease both;
+}
+
+.hero-headline {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(3rem, 7vw, 5.4rem);
+  font-weight: 600;
+  color: #ffffff;
+  line-height: 1.08;
+  margin: 0 0 28px;
+  letter-spacing: -0.02em;
+  animation: fadeUp 0.55s 0.07s ease both;
+}
+
+.hero-sub {
+  font-family: 'Nunito', sans-serif;
+  font-size: clamp(0.95rem, 1.6vw, 1.1rem);
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.72);
+  max-width: 560px;
+  margin: 0 0 44px;
+  line-height: 1.70;
+  animation: fadeUp 0.55s 0.14s ease both;
+}
+
+.hero-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: $orange;
+  color: $white;
+  font-family: 'Nunito', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  text-decoration: none;
+  padding: 0 32px;
+  height: 52px;
+  border-radius: 100px;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  animation: fadeUp 0.55s 0.21s ease both;
+  transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+  box-shadow: 0 8px 28px rgba(232, 76, 14, 0.45);
+
+  svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    opacity: 0.9;
+  }
+
+  &:hover {
+    background: $orange-dark;
+    transform: scale(1.04);
+    box-shadow: 0 12px 36px rgba(232, 76, 14, 0.55);
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+.hero-note {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 20px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.60);
+  animation: fadeUp 0.55s 0.28s ease both;
+
+  svg {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+    opacity: 0.75;
+  }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 640px) {
+  .hero-content {
+    padding: 100px 20px 60px;
+  }
+  .hero-headline {
+    font-size: 2.6rem;
+  }
+  .hero-cta {
+    height: 48px;
+    padding: 0 26px;
+    font-size: 0.95rem;
+  }
+}
+
+
+// ════════════════════════════════════════════════════════════════════════════
+// ── 2. Meet Our Doctors
+// ════════════════════════════════════════════════════════════════════════════
+
+.doctors-section {
+  background: #ffffff;
+  padding: 88px 40px 96px;
+  font-family: 'Nunito', sans-serif;
+}
+
+.doctors-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.doctors-header {
+  text-align: center;
+  margin-bottom: 52px;
+}
+
+.doctors-eyebrow {
+  display: inline-block;
+  font-size: 0.70rem;
+  font-weight: 700;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  color: #16A34A;
+  margin-bottom: 10px;
+}
+
+.doctors-title {
+  font-family: 'Nunito', sans-serif;
+  font-size: clamp(1.9rem, 3.2vw, 2.6rem);
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 14px;
+  letter-spacing: -0.02em;
+  line-height: 1.18;
+}
+
+.doctors-accent-bar {
+  width: 48px;
+  height: 3px;
+  background: #16A34A;
+  border-radius: 4px;
+  margin: 0 auto 20px;
+}
+
+.doctors-subtitle {
+  font-size: 0.95rem;
+  color: #64748b;
+  max-width: 520px;
+  margin: 0 auto;
+  line-height: 1.78;
+}
+
+.doctors-marquee-wrap {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 6%, #000 94%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0%, #000 6%, #000 94%, transparent 100%);
+  padding: 12px 0 16px;
+
+  &:hover .doctors-marquee {
+    animation-play-state: paused;
+  }
+}
+
+.doctors-marquee {
+  display: flex;
+  gap: 22px;
+  width: max-content;
+  animation: doctorsScroll 38s linear infinite;
+
+  @media (max-width: 768px) {
+    animation-duration: 26s;
+    gap: 14px;
+  }
+}
+
+@keyframes doctorsScroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.doc-card-new {
+  background: #ffffff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.08), 0 1px 4px rgba(15, 23, 42, 0.04);
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.28s ease;
+  width: 260px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 48px rgba(15, 23, 42, 0.14), 0 4px 12px rgba(15, 23, 42, 0.06);
+
+    .doc-card-new__img {
+      transform: scale(1.06);
+    }
+  }
+
+  @media (max-width: 768px) {
+    width: 210px;
+  }
+}
+
+.doc-card-new__img-wrap {
+  width: 100%;
+  height: 230px;
+  overflow: hidden;
+  flex-shrink: 0;
+
+  @media (max-width: 768px) {
+    height: 185px;
+  }
+}
+
+.doc-card-new__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+  transition: transform 0.48s ease;
+}
+
+.doc-card-new__body {
+  padding: 18px 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex: 1;
+  border-top: 2px solid #f1f5f9;
+}
+
+.doc-card-new__name {
+  font-family: 'Nunito', sans-serif;
+  font-size: 1rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.doc-card-new__qual {
+  font-size: 0.78rem;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.45;
+}
+
+.doc-card-new__spec {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #16A34A;
+  margin: 2px 0 0;
+  line-height: 1.40;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.doc-card-new__clinic {
+  font-weight: 400;
+  color: #94a3b8;
+}
+
+@media (max-width: 768px) {
+  .doctors-section { padding: 64px 0 72px; }
+  .doctors-inner   { padding: 0; }
+  .doctors-header  { padding: 0 24px; }
+}
+
+
+// ════════════════════════════════════════════════════════════════════════════
+// ── 3. Our Story
+// ════════════════════════════════════════════════════════════════════════════
+
+.story-section {
+  background: #ffffff;
+  padding: 80px 40px 80px 0;
+  font-family: 'Nunito', sans-serif;
+}
+
+.story-inner {
+  max-width: 1320px;
+  margin: 0 auto;
+  display: flex;
+  align-items: stretch;
+  gap: 16px;
+
+  @media (max-width: 860px) {
+    flex-direction: column;
+    gap: 40px;
+  }
+}
+
+.story-img-col {
+  flex: 0 0 640px;
+  max-width: 640px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  @media (max-width: 1024px) {
+    flex: 0 0 460px;
+    max-width: 460px;
+  }
+
+  @media (max-width: 860px) {
+    flex: unset;
+    max-width: 380px;
+    width: 100%;
+    margin: 0 auto;
+    justify-content: center;
+  }
+}
+
+.story-img {
+  width: 95%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  object-position: bottom center;
+}
+
+.story-text-col {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 28px;
+}
+
+.story-quote {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: clamp(1.9rem, 3.4vw, 2.65rem);
+  font-weight: 400;
+  color: #1a1a2e;
+  line-height: 1.35;
+  margin: 0;
+  padding: 0;
+  border: none;
+  letter-spacing: -0.01em;
+}
+
+.story-body {
+  font-size: 1.08rem;
+  color: #4b5563;
+  line-height: 1.85;
+  margin: 0;
+  max-width: 540px;
+}
+
+@media (max-width: 860px) {
+  .story-section {
+    padding: 60px 24px;
+  }
+
+  .story-text-col {
+    text-align: center;
+  }
+
+  .story-body {
+    max-width: 100%;
+    margin: 0 auto;
+  }
+}
+
+
+// ════════════════════════════════════════════════════════════════════════════
+// ── 4. Our Services
+// ════════════════════════════════════════════════════════════════════════════
+
+.services-section {
+  background: #ffffff;
+  padding: 60px 40px 72px;
+  font-family: 'Nunito', sans-serif;
+}
+
+.services-inner {
+  max-width: 1160px;
+  margin: 0 auto;
+}
+
+.services-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.services-eyebrow {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #6b7280;
+  margin-bottom: 8px;
+}
+
+.services-title {
+  font-size: clamp(1.6rem, 3vw, 2.1rem);
+  font-weight: 800;
+  color: #1e2d4d;
+  margin: 0;
+  line-height: 1.25;
+
+  .highlight { color: #29b3e8; }
+}
+
+.services-viewport {
+  overflow: hidden;
+}
+
+.services-grid {
+  display: flex;
+  gap: 20px;
+  transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.svc-card {
+  flex: 0 0 calc((100% - 60px) / 4);
+  min-width: 0;
+  background: #fff;
+  border-bottom: 2.5px solid #1e3a8a;
+  overflow: hidden;
+  cursor: pointer;
+
+  @media (max-width: 900px) { flex: 0 0 calc((100% - 20px) / 2); }
+  @media (max-width: 540px) { flex: 0 0 100%; }
+}
+
+.svc-card__img-wrap {
+  width: 100%;
+  height: 190px;
+  overflow: hidden;
+}
+
+.svc-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s ease;
+
+  .svc-card:hover & {
+    transform: scale(1.05);
+  }
+}
+
+.svc-card__bottom {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 16px 20px;
+}
+
+.svc-card__icon {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    width: 38px;
+    height: 38px;
+    color: #1e3a8a;
+  }
+}
+
+.svc-card__text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.svc-card__label {
+  font-size: 0.97rem;
+  font-weight: 700;
+  color: #1e2d4d;
+  margin: 0;
+  line-height: 1.25;
+}
+
+.svc-card__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #29b3e8;
+  cursor: pointer;
+}
+
+.services-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 28px;
+}
+
+.services-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #d1d5db;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+
+  &.active {
+    background: #1e3a8a;
+    transform: scale(1.2);
+  }
+}
+
+
+// ── Story CTA ─────────────────────────────────────────────────────────────
+.story-cta-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.story-cta-hint {
+  font-size: 0.88rem;
+  color: #9ca3af;
+  margin: 0;
+  font-family: 'Nunito', sans-serif;
+  white-space: nowrap;
+}
+
+.story-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: #e84c0e;
+  color: #ffffff;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-decoration: none;
+  padding: 0 22px;
+  height: 42px;
+  border-radius: 100px;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+  box-shadow: 0 6px 20px rgba(232, 76, 14, 0.35);
+
+  svg {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+    opacity: 0.9;
+  }
+
+  &:hover {
+    background: #c43c06;
+    transform: scale(1.03);
+    box-shadow: 0 10px 28px rgba(232, 76, 14, 0.45);
+  }
+
+  &:active { transform: scale(0.97); }
+}
+
+@media (max-width: 860px) {
+  .story-cta-row {
+    justify-content: center;
+  }
+}

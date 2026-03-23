@@ -1,0 +1,598 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap');
+
+// ─── Variables ────────────────────────────────────────────────
+$navy:           #0b2d6e;
+$blue-primary:   #0052cc;
+$blue-hover:     #0065ff;
+$blue-light:     #e9f2ff;
+$blue-border:    #b3d4ff;
+$blue-focus:     #4c9aff;
+
+$text-dark:      #172b4d;
+$text-mid:       #5e6c84;
+$text-muted:     #6b778c;
+$text-label:     #8993a4;
+
+$border:         #dfe1e6;
+$border-light:   #f4f5f7;
+$bg:             #f4f5f7;
+$white:          #ffffff;
+$search-bg:      #2c3e5a;
+
+$shadow-card:     0 1px 2px rgba(9, 30, 66, 0.08);
+$shadow-hover:    0 4px 20px rgba(9, 30, 66, 0.15);
+$shadow-modal:    0 8px 50px rgba(9, 30, 66, 0.35);
+
+@mixin transition($props: all, $dur: 0.18s, $ease: ease) {
+  transition: $props $dur $ease;
+}
+
+// ─── Page Shell ───────────────────────────────────────────────
+.ba-page {
+  font-family: 'DM Sans', sans-serif;
+  background: $bg;
+  min-height: 100vh;
+  color: $text-dark;
+}
+
+// ─── Header ───────────────────────────────────────────────────
+.ba-header {
+  background: $white;
+  border-bottom: 1px solid $border;
+  padding: 24px 32px 0;
+
+  &__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  &__title {
+    font-size: 24px;
+    font-weight: 600;
+    color: $text-dark;
+    margin: 0 0 16px;
+    letter-spacing: -0.01em;
+  }
+}
+
+// ─── Search Bar ───────────────────────────────────────────────
+.ba-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: $search-bg;
+  border: 1px solid lighten($search-bg, 10%);
+  border-radius: 4px;
+  padding: 10px 16px;
+  margin-bottom: 0;
+  @include transition(border-color, 0.15s);
+
+  &:focus-within {
+    border-color: $blue-focus;
+    box-shadow: 0 0 0 2px rgba(76, 154, 255, 0.25);
+  }
+
+  &__icon {
+    color: #8fa8c8;
+    flex-shrink: 0;
+  }
+
+  &__input {
+    border: none;
+    background: none;
+    outline: none;
+    font-size: 14px;
+    color: #c8d8f0;
+    font-family: 'DM Sans', sans-serif;
+    width: 100%;
+
+    &::placeholder {
+      color: #7a90aa;
+    }
+  }
+
+  &__clear {
+    background: none;
+    border: none;
+    color: #8fa8c8;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    padding: 0;
+    flex-shrink: 0;
+    @include transition(color, 0.15s);
+
+    &:hover { color: $white; }
+  }
+}
+
+// ─── Body Layout ──────────────────────────────────────────────
+.ba-body {
+  display: flex;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+// ─── Sidebar ──────────────────────────────────────────────────
+.ba-sidebar {
+  width: 200px;
+  flex-shrink: 0;
+  padding: 20px 20px 40px 0;
+  border-right: 1px solid $border;
+  min-height: calc(100vh - 112px);
+
+  &__heading {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: $text-label;
+    margin: 0 0 14px;
+  }
+
+  &__clear {
+    background: none;
+    border: none;
+    color: $blue-primary;
+    font-size: 12.5px;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: underline;
+    margin-top: 4px;
+    @include transition(opacity, 0.15s);
+
+    &:hover { opacity: 0.75; }
+  }
+}
+
+// ─── Filter Section ───────────────────────────────────────────
+.ba-filter-section {
+  margin-bottom: 20px;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    background: none;
+    border: none;
+    border-bottom: 1px solid $border;
+    padding: 0 0 8px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: $text-dark;
+    @include transition(color, 0.15s);
+
+    &:hover { color: $blue-primary; }
+  }
+
+  &__arrow {
+    font-size: 10px;
+    color: $text-muted;
+    display: inline-block;
+    transform: rotate(180deg);
+    @include transition(transform, 0.2s);
+
+    .ba-filter-section__header--open & {
+      transform: rotate(0deg);
+    }
+  }
+
+  &__list {
+    list-style: none;
+    margin: 8px 0 0;
+    padding: 0;
+  }
+
+  &__item {
+    margin-bottom: 6px;
+  }
+
+  &__label {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 12.5px;
+    color: $text-mid;
+    line-height: 1.4;
+    @include transition(color, 0.12s);
+
+    &--checked {
+      color: $blue-primary;
+      font-weight: 500;
+    }
+
+    &:hover { color: $text-dark; }
+  }
+
+  &__checkbox {
+    margin-top: 2px;
+    flex-shrink: 0;
+    accent-color: $blue-primary;
+    width: 13px;
+    height: 13px;
+    cursor: pointer;
+  }
+}
+
+// ─── Main Content ─────────────────────────────────────────────
+.ba-main {
+  flex: 1;
+  padding: 20px 0 40px 24px;
+  min-width: 0;
+}
+
+.ba-main__count {
+  font-size: 13px;
+  color: $text-mid;
+  margin: 0 0 14px;
+
+  strong { color: $text-dark; }
+}
+
+// ─── Cards Container ──────────────────────────────────────────
+.ba-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 0; // gap handled by card margin-bottom
+}
+
+// ─── Doctor Card ──────────────────────────────────────────────
+.ba-card {
+  display: flex;
+  align-items: stretch;
+  background: $white;
+  border: 1px solid $border;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: $shadow-card;
+  margin-bottom: 10px;
+  @include transition(all, 0.18s);
+
+  &:hover {
+    border-color: $blue-border;
+    box-shadow: $shadow-hover;
+    transform: translateY(-1px);
+  }
+
+  // Avatar column
+  &__avatar-wrap {
+    width: 110px;
+    flex-shrink: 0;
+    background: linear-gradient(160deg, #e8f0fb 0%, #d0e4f7 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid $border;
+  }
+
+  &__avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #c8d8f0, #a0bde8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.35rem;
+    color: $navy;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+
+  // Body column
+  &__body {
+    flex: 1;
+    padding: 14px 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+  }
+
+  &__name {
+    font-size: 15px;
+    font-weight: 600;
+    color: $blue-primary;
+    margin: 0 0 2px;
+    line-height: 1.3;
+  }
+
+  &__role {
+    font-size: 12px;
+    color: $text-mid;
+    margin: 0 0 4px;
+    line-height: 1.4;
+  }
+
+  &__quals {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: $text-dark;
+    margin: 0 0 6px;
+    line-height: 1.5;
+  }
+
+  &__bio {
+    font-size: 12px;
+    color: $text-muted;
+    margin: 0;
+    line-height: 1.6;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  // Meta column
+  &__meta {
+    width: 190px;
+    flex-shrink: 0;
+    padding: 14px 16px;
+    border-left: 1px solid $border;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 8px;
+  }
+
+  &__info-block {
+    text-align: right;
+  }
+
+  &__info-label {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 3px;
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: $text-label;
+    margin-bottom: 3px;
+  }
+
+  &__info-value {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: $text-dark;
+    line-height: 1.3;
+    display: block;
+    text-align: right;
+  }
+
+  &__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 7px 13px;
+    border-radius: 4px;
+    background: $blue-primary;
+    border: none;
+    color: $white;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12.5px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    @include transition(background, 0.15s);
+
+    &:hover { background: $blue-hover; }
+
+    &-icon {
+      flex-shrink: 0;
+    }
+  }
+}
+
+// ─── Meta Icon ────────────────────────────────────────────────
+.ba-meta__icon {
+  flex-shrink: 0;
+  color: $text-label;
+}
+
+// ─── Empty State ──────────────────────────────────────────────
+.ba-empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: $text-mid;
+  font-size: 14px;
+
+  &__icon {
+    font-size: 36px;
+    margin-bottom: 12px;
+  }
+}
+
+// ─── Booking Modal ────────────────────────────────────────────
+.ba-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(9, 30, 66, 0.54);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.ba-modal {
+  background: $white;
+  border-radius: 6px;
+  padding: 28px 24px;
+  max-width: 380px;
+  width: 90%;
+  box-shadow: $shadow-modal;
+  position: relative;
+  font-family: 'DM Sans', sans-serif;
+
+  &__close {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: $text-muted;
+    line-height: 1;
+    @include transition(color, 0.15s);
+    &:hover { color: $text-dark; }
+  }
+
+  &__title {
+    font-weight: 600;
+    color: $text-dark;
+    margin: 0 0 4px;
+    font-size: 16px;
+  }
+
+  &__subtitle {
+    font-size: 13px;
+    color: $text-mid;
+    margin: 0 0 18px;
+    line-height: 1.5;
+
+    strong { color: $blue-primary; }
+  }
+
+  &__field {
+    margin-bottom: 12px;
+  }
+
+  &__label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    color: $text-muted;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  &__input {
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 4px;
+    border: 2px solid $border;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    outline: none;
+    box-sizing: border-box;
+    color: $text-dark;
+    @include transition(border-color, 0.15s);
+
+    &:focus { border-color: $blue-focus; }
+    &::placeholder { color: #97a0af; }
+  }
+
+  &__submit {
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    background: $blue-primary;
+    border: none;
+    color: $white;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    margin-top: 4px;
+    @include transition(background, 0.15s);
+    &:hover { background: $blue-hover; }
+  }
+
+  &__success {
+    text-align: center;
+    padding: 10px 0;
+  }
+
+  &__success-icon {
+    font-size: 40px;
+    margin-bottom: 10px;
+  }
+
+  &__success-title {
+    color: $text-dark;
+    margin: 0 0 8px;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  &__success-text {
+    font-size: 13px;
+    color: $text-mid;
+    line-height: 1.6;
+
+    strong { color: $text-dark; }
+  }
+
+  &__done {
+    margin-top: 14px;
+    padding: 8px 22px;
+    border-radius: 4px;
+    background: $blue-primary;
+    border: none;
+    color: $white;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    @include transition(background, 0.15s);
+    &:hover { background: $blue-hover; }
+  }
+}
+
+// ─── Responsive ───────────────────────────────────────────────
+@media (max-width: 900px) {
+  .ba-sidebar { width: 170px; }
+  .ba-card__meta { width: 160px; }
+}
+
+@media (max-width: 680px) {
+  .ba-header { padding: 16px 16px 0; }
+  .ba-body { padding: 0 16px; flex-direction: column; }
+
+  .ba-sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid $border;
+    padding: 16px 0;
+    min-height: unset;
+  }
+
+  .ba-main { padding: 16px 0 32px; }
+
+  .ba-card {
+    flex-direction: column;
+
+    &__avatar-wrap {
+      width: 100%;
+      height: 100px;
+      border-right: none;
+      border-bottom: 1px solid $border;
+    }
+
+    &__meta {
+      width: 100%;
+      border-left: none;
+      border-top: 1px solid $border;
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    &__cta {
+      width: 100%;
+      justify-content: center;
+      margin-top: 4px;
+    }
+  }
+}

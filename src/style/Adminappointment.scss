@@ -1,0 +1,1132 @@
+// ─── Tokens (mirrors Admindashboard.scss) ─────────────────────────────────────
+$font:      'Plus Jakarta Sans', -apple-system, sans-serif;
+$bg-page:   #F0F2F5;
+$bg-card:   #FFFFFF;
+$bg-sunken: #F1F2F4;
+$dk-bg:     #18263A;
+$tb-bg:     #111827;
+$tb-border: rgba(255,255,255,.08);
+$ph-border: #E2E8F0;
+$brand:     #4C9BE8;
+$t-hi:      #0F172A;
+$t-med:     #475569;
+$t-sub:     #64748B;
+$t-faint:   #94A3B8;
+$dt-hi:     #F1F5F9;
+$dt-med:    #94A3B8;
+$r-sm:  6px;
+$r-md:  10px;
+$r-lg:  14px;
+$sh1:   0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+$sh2:   0 4px 16px rgba(0,0,0,.10);
+$sh3:   0 8px 24px rgba(0,0,0,.14);
+
+// ─── Shell ────────────────────────────────────────────────────────────────────
+.ap-shell {
+  display: flex;
+  min-height: 100vh;
+  background: $bg-page;
+  font-family: $font;
+  color: $t-hi;
+  -webkit-font-smoothing: antialiased;
+}
+
+.ap-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+// ─── Topbar ───────────────────────────────────────────────────────────────────
+.ap-topbar {
+  height: 52px;
+  background: $tb-bg;
+  border-bottom: 1px solid $tb-border;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+
+  &__crumbs {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #64748B;
+    font-size: 12.5px;
+    font-weight: 500;
+
+    svg { opacity: .5; }
+  }
+
+  &__crumb {
+    &--root   { color: #475569; }
+    &--active { color: #CBD5E1; font-weight: 600; }
+  }
+
+  &__right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+}
+
+// ─── Page Header ──────────────────────────────────────────────────────────────
+.ap-page-hdr {
+  background: $bg-card;
+  border-bottom: 1px solid $ph-border;
+  padding: 16px 24px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  &__title {
+    font-size: 22px;
+    font-weight: 800;
+    color: $t-hi;
+    letter-spacing: -0.4px;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  &__sub {
+    font-size: 12px;
+    color: $t-sub;
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+}
+
+.ap-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: $brand;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: $r-sm;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: $font;
+  transition: opacity .12s, transform .12s;
+  box-shadow: 0 2px 8px rgba(76,155,232,.3);
+
+  &:hover { opacity: .88; transform: translateY(-1px); }
+  &:active { transform: translateY(0); }
+}
+
+// ─── Body ─────────────────────────────────────────────────────────────────────
+.ap-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ap-eyebrow {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  color: $t-faint;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+// ─── Metric Cards (dark — same as dashboard mc) ───────────────────────────────
+.ap-mc-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+
+  @media (max-width: 1100px) { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 580px)  { grid-template-columns: repeat(2, 1fr); }
+}
+
+.ap-mc {
+  background: $dk-bg;
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: $r-lg;
+  padding: 16px 16px 14px;
+  box-shadow: $sh2;
+  transition: transform .15s, box-shadow .15s;
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: -20px; left: -20px;
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,.03) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $sh3;
+    background: #1E2F47;
+  }
+
+  &__top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  &__icon {
+    width: 34px;
+    height: 34px;
+    border-radius: $r-sm;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    &--blue   { background: rgba(76,155,232,.18);  color: #4C9BE8; }
+    &--green  { background: rgba(52,211,153,.15);  color: #34D399; }
+    &--amber  { background: rgba(251,191,36,.15);  color: #FBBF24; }
+    &--red    { background: rgba(248,113,113,.15); color: #F87171; }
+  }
+
+  &__badge {
+    font-size: 10.5px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 4px;
+
+    &--up   { background: rgba(52,211,153,.15); color: #34D399; }
+    &--down { background: rgba(251,191,36,.15); color: #FBBF24; }
+  }
+
+  &__value {
+    font-size: 24px;
+    font-weight: 800;
+    color: $dt-hi;
+    letter-spacing: -0.6px;
+    line-height: 1;
+    margin-bottom: 3px;
+  }
+
+  &__label {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: $dt-med;
+    margin-bottom: 2px;
+  }
+
+  &__sub {
+    font-size: 10.5px;
+    color: #64748B;
+  }
+
+  &__bar {
+    margin-top: 12px;
+    height: 2px;
+    background: rgba(255,255,255,.08);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+
+  &__bar-fill {
+    height: 100%;
+    border-radius: 99px;
+    opacity: .8;
+  }
+}
+
+// ─── Toolbar (search + filters) ───────────────────────────────────────────────
+.ap-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.ap-searchbox {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: $bg-card;
+  border: 1px solid $ph-border;
+  border-radius: $r-sm;
+  padding: 7px 12px;
+  width: 280px;
+  transition: border-color .15s, box-shadow .15s;
+
+  &:focus-within {
+    border-color: $brand;
+    box-shadow: 0 0 0 3px rgba($brand, .1);
+  }
+
+  svg { color: $t-faint; flex-shrink: 0; }
+
+  input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    outline: none;
+    font-size: 12.5px;
+    color: $t-hi;
+    font-family: $font;
+
+    &::placeholder { color: $t-faint; }
+  }
+}
+
+.ap-filters {
+  display: flex;
+  gap: 4px;
+  background: $bg-sunken;
+  border: 1px solid $ph-border;
+  border-radius: $r-sm;
+  padding: 3px;
+}
+
+.ap-filter-btn {
+  padding: 4px 12px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: $t-sub;
+  background: transparent;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: $font;
+  transition: all .12s;
+
+  &:hover:not(&--on) { color: $t-hi; }
+
+  &--on {
+    background: $bg-card;
+    color: $t-hi;
+    box-shadow: $sh1;
+  }
+}
+
+// ─── Table Card ───────────────────────────────────────────────────────────────
+.ap-card {
+  background: $bg-card;
+  border: 1px solid $ph-border;
+  border-radius: $r-lg;
+  box-shadow: $sh1;
+  overflow: hidden;
+}
+
+.ap-table-wrap {
+  overflow-x: auto;
+}
+
+.ap-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 820px;
+
+  thead tr {
+    background: $bg-sunken;
+    border-bottom: 2px solid #CBD5E1;
+  }
+
+  th {
+    text-align: left;
+    padding: 11px 16px;
+    font-size: 10.5px;
+    font-weight: 700;
+    color: $t-faint;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    white-space: nowrap;
+    border-right: 1px solid #E2E8F0;
+
+    &:last-child { border-right: none; }
+  }
+
+  td {
+    padding: 13px 16px;
+    font-size: 13px;
+    color: $t-hi;
+    border-bottom: 1px solid #CBD5E1;
+    border-right: 1px solid #E2E8F0;
+    vertical-align: middle;
+
+    &:last-child { border-right: none; }
+  }
+
+  tbody tr {
+    cursor: pointer;
+    transition: background .12s;
+
+    &:last-child td { border-bottom: none; }
+    &:hover { background: #F8FAFC; }
+  }
+}
+
+.ap-row--selected td { background: #EFF6FF !important; }
+
+.ap-id {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: $t-sub;
+  font-variant-numeric: tabular-nums;
+  font-family: monospace;
+}
+
+.ap-patient {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  color: $t-hi;
+}
+
+.ap-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4C9BE8, #7C3AED);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.ap-doctor {
+  font-size: 12.5px;
+  color: $t-med;
+}
+
+.ap-dept {
+  background: $bg-sunken;
+  border: 1px solid $ph-border;
+  border-radius: $r-sm;
+  padding: 3px 8px;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: $t-sub;
+  white-space: nowrap;
+}
+
+.ap-datetime {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ap-date {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: $t-hi;
+}
+
+.ap-time {
+  font-size: 11px;
+  color: $t-faint;
+}
+
+.ap-type {
+  font-size: 12.5px;
+  color: $t-sub;
+}
+
+// Status lozenges — same style as dashboard .loz
+.ap-loz {
+  display: inline-flex;
+  align-items: center;
+  font-size: 9.5px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 3px;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  white-space: nowrap;
+
+  &--green  { background: #DCFCE7; color: #15803D; }
+  &--amber  { background: #FEF3C7; color: #B45309; }
+  &--red    { background: #FEE2E2; color: #B91C1C; }
+}
+
+// Row actions
+.ap-actions {
+  display: flex;
+  gap: 5px;
+}
+
+.ap-action-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: $r-sm;
+  border: 1px solid $ph-border;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .12s, border-color .12s, color .12s;
+
+  &--edit {
+    color: $brand;
+    &:hover { background: #EFF6FF; border-color: #BFDBFE; }
+  }
+
+  &--delete {
+    color: #F87171;
+    &:hover { background: #FEF2F2; border-color: #FECACA; }
+  }
+}
+
+.ap-empty {
+  text-align: center;
+  color: $t-faint;
+  font-size: 13px;
+  padding: 40px 0 !important;
+}
+
+// ─── Table Footer ─────────────────────────────────────────────────────────────
+.ap-table-foot {
+  padding: 12px 16px;
+  border-top: 1px solid $ph-border;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ap-count {
+  font-size: 12px;
+  color: $t-faint;
+}
+
+// ─── Mobile Responsive ────────────────────────────────────────────────────────
+@media (max-width: 768px) {
+
+  // Shell: stack sidebar above main on mobile
+  .ap-shell {
+    flex-direction: column;
+  }
+
+  // Main content full width
+  .ap-main {
+    width: 100%;
+    overflow: visible;
+  }
+
+  // Topbar: tighter padding
+  .ap-topbar {
+    padding: 0 14px;
+    height: 48px;
+  }
+
+  // Page header: stack title + button vertically
+  .ap-page-hdr {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+
+    &__title {
+      font-size: 18px;
+    }
+
+    &__actions {
+      width: 100%;
+
+      .ap-btn-primary {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  }
+
+  // Body: reduce padding
+  .ap-body {
+    padding: 14px 12px;
+    gap: 14px;
+  }
+
+  // Metric cards: compact 2-column grid on mobile
+  .ap-mc-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .ap-mc {
+    padding: 10px 11px;
+
+    &__top { margin-bottom: 7px; }
+
+    &__icon {
+      width: 26px;
+      height: 26px;
+      border-radius: 5px;
+    }
+
+    &__badge {
+      font-size: 9px;
+      padding: 2px 5px;
+    }
+
+    &__value {
+      font-size: 18px;
+      margin-bottom: 2px;
+    }
+
+    &__label { font-size: 10.5px; }
+
+    &__sub { font-size: 9.5px; }
+
+    &__bar { margin-top: 8px; }
+  }
+
+  // Toolbar inside card: stack search + filters
+  .ap-card > div:first-child {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  // Search box: full width
+  .ap-searchbox {
+    width: 100%;
+  }
+
+  // Filter pills: scroll horizontally if needed
+  .ap-filters {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    flex-wrap: nowrap;
+    width: 100%;
+
+    // Scrollbar hidden on mobile for cleanliness
+    &::-webkit-scrollbar { display: none; }
+    scrollbar-width: none;
+  }
+
+  .ap-filter-btn {
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  // Table: horizontal scroll, smaller text
+  .ap-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .ap-table {
+    min-width: 640px;
+
+    th, td {
+      padding: 10px 12px;
+    }
+
+    th { font-size: 9.5px; }
+    td { font-size: 12px; }
+  }
+
+  .ap-avatar {
+    width: 26px;
+    height: 26px;
+    font-size: 9px;
+  }
+
+  .ap-action-btn {
+    width: 26px;
+    height: 26px;
+  }
+
+  // Table footer
+  .ap-table-foot {
+    padding: 10px 14px;
+    flex-direction: column;
+    gap: 6px;
+    text-align: center;
+  }
+}
+
+@media (max-width: 420px) {
+
+  // Keep 2-column metric cards even on very small screens
+  .ap-mc-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .ap-topbar {
+    padding: 0 10px;
+  }
+
+  .ap-body {
+    padding: 12px 10px;
+  }
+
+  .ap-page-hdr {
+    padding: 12px 10px;
+  }
+}
+
+// ─── NEW APPOINTMENT MODAL ────────────────────────────────────────────────────
+// Append these rules to the bottom of Adminappointment.scss
+
+.ap-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(2px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: ap-fade-in 0.15s ease;
+}
+
+@keyframes ap-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.ap-modal {
+  background: $bg-card;
+  border-radius: $r-lg;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  width: 100%;
+  max-width: 720px;
+  max-height: 92vh;
+  overflow-y: auto;
+  animation: ap-slide-up 0.18s ease;
+
+  // Custom scrollbar inside modal
+  &::-webkit-scrollbar { width: 4px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 99px; }
+
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 28px 32px 22px;
+    border-bottom: 1px solid $ph-border;
+  }
+
+  &__title {
+    font-size: 20px;
+    font-weight: 800;
+    color: $t-hi;
+    letter-spacing: -0.3px;
+    margin-bottom: 4px;
+  }
+
+  &__sub {
+    font-size: 13px;
+    color: $t-sub;
+  }
+
+  &__close {
+    width: 34px;
+    height: 34px;
+    border-radius: $r-sm;
+    border: 1px solid $ph-border;
+    background: transparent;
+    color: $t-faint;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-left: 16px;
+    transition: background 0.12s, color 0.12s;
+
+    &:hover {
+      background: #FEE2E2;
+      color: #B91C1C;
+      border-color: #FECACA;
+    }
+  }
+
+  &__body {
+    padding: 28px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  &__footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-top: 24px;
+    border-top: 1px solid $ph-border;
+    margin-top: 4px;
+  }
+}
+
+@keyframes ap-slide-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// ─── Form Fields ──────────────────────────────────────────────────────────────
+.ap-field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ap-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+
+  &__label {
+    font-size: 13px;
+    font-weight: 700;
+    color: $t-med;
+    letter-spacing: 0.01em;
+  }
+
+  &__req {
+    color: #F87171;
+    margin-left: 1px;
+  }
+
+  &__input {
+    height: 44px;
+    border: 1px solid $ph-border;
+    border-radius: $r-sm;
+    padding: 0 14px;
+    font-size: 14px;
+    color: $t-hi;
+    background: $bg-card;
+    font-family: $font;
+    outline: none;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.15s, box-shadow 0.15s;
+
+    &::placeholder { color: $t-faint; }
+
+    &:focus {
+      border-color: $brand;
+      box-shadow: 0 0 0 3px rgba(76, 155, 232, 0.12);
+    }
+
+    &--err {
+      border-color: #F87171;
+      box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.1);
+    }
+  }
+
+  &__select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 20 20' fill='%2394A3B8'%3E%3Cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 36px;
+    cursor: pointer;
+  }
+
+  &__err {
+    font-size: 12px;
+    color: #B91C1C;
+    font-weight: 500;
+  }
+}
+
+// ─── Ghost Button ─────────────────────────────────────────────────────────────
+.ap-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  color: $t-sub;
+  border: 1px solid $ph-border;
+  padding: 10px 20px;
+  border-radius: $r-sm;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: $font;
+  transition: background 0.12s, color 0.12s;
+
+  &:hover {
+    background: $bg-sunken;
+    color: $t-hi;
+  }
+}
+
+// ─── Mobile modal ─────────────────────────────────────────────────────────────
+@media (max-width: 600px) {
+  .ap-modal-backdrop {
+    padding: 12px;
+    align-items: flex-end;
+  }
+
+  .ap-modal {
+    max-height: 92vh;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    width: 100%;
+  }
+}
+
+
+// ─── STATUS CHANGE MODAL ──────────────────────────────────────────────────────
+
+// Make the status badge a clickable button
+.ap-loz--clickable {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  border: none;
+  font-family: $font;
+  transition: filter .12s, transform .12s;
+
+  &:hover {
+    filter: brightness(.92);
+    transform: translateY(-1px);
+  }
+
+  &:active { transform: translateY(0); }
+}
+
+// The modal itself — narrower than the new-appt modal
+.ap-smodal {
+  background: $bg-card;
+  border-radius: $r-lg;
+  box-shadow: 0 20px 60px rgba(0,0,0,.25);
+  width: 100%;
+  max-width: 460px;
+  animation: ap-slide-up .18s ease;
+  overflow: hidden;
+
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 22px 24px 18px;
+    border-bottom: 1px solid $ph-border;
+  }
+
+  &__title {
+    font-size: 16px;
+    font-weight: 800;
+    color: $t-hi;
+    letter-spacing: -.2px;
+    margin-bottom: 5px;
+  }
+
+  &__sub {
+    font-size: 12px;
+    color: $t-sub;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  &__patient {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 600;
+    color: $t-med;
+  }
+
+  // "Current status:" strip
+  &__current {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 24px;
+    background: $bg-sunken;
+    border-bottom: 1px solid $ph-border;
+  }
+
+  &__current-label {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: $t-faint;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+  }
+
+  // Three option cards
+  &__options {
+    padding: 16px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &__footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 16px 24px;
+    border-top: 1px solid $ph-border;
+  }
+
+  // ── Success state ───────────────────────────────────────────────────────────
+  &__success {
+    padding: 48px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    text-align: center;
+    animation: ap-fade-in .2s ease;
+  }
+
+  &__success-ring {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: #DCFCE7;
+    color: #15803D;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: ap-pop .25s cubic-bezier(.34,1.56,.64,1);
+  }
+
+  &__success-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: $t-hi;
+    letter-spacing: -.3px;
+  }
+
+  &__success-sub {
+    font-size: 13px;
+    color: $t-sub;
+
+    strong { color: $t-hi; font-weight: 700; }
+  }
+}
+
+@keyframes ap-pop {
+  0%   { transform: scale(.4); opacity: 0; }
+  100% { transform: scale(1);  opacity: 1; }
+}
+
+// ─── Status Option Card ───────────────────────────────────────────────────────
+.ap-sopt {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  background: $bg-card;
+  border: 1.5px solid $ph-border;
+  border-radius: $r-md;
+  cursor: pointer;
+  text-align: left;
+  font-family: $font;
+  transition: border-color .12s, background .12s, box-shadow .12s;
+
+  &:hover:not(&--selected) {
+    border-color: #CBD5E1;
+    background: #F8FAFC;
+    box-shadow: 0 2px 8px rgba(0,0,0,.06);
+  }
+
+  &--selected {
+    box-shadow: 0 2px 12px rgba(0,0,0,.08);
+  }
+
+  // Dim when it's already the current and not selected
+  &--current:not(&--selected) {
+    opacity: .65;
+  }
+
+  &__icon {
+    width: 46px;
+    height: 46px;
+    border-radius: $r-sm;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  &__text {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__label {
+    font-size: 14px;
+    font-weight: 700;
+    color: $t-hi;
+    margin-bottom: 2px;
+  }
+
+  &__desc {
+    font-size: 12px;
+    color: $t-sub;
+    line-height: 1.4;
+  }
+
+  &__curr-tag {
+    display: inline-block;
+    margin-top: 5px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    background: #E2E8F0;
+    color: #64748B;
+    padding: 2px 7px;
+    border-radius: 4px;
+  }
+
+  // Circle checkmark on the right
+  &__check {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid #CBD5E1;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background .12s, border-color .12s;
+    color: #fff;
+
+    &--on {
+      animation: ap-pop .2s cubic-bezier(.34,1.56,.64,1);
+    }
+  }
+}
+
+// Mobile status modal
+@media (max-width: 500px) {
+  .ap-smodal {
+    max-width: 100%;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  .ap-modal-backdrop {
+    align-items: flex-end;
+  }
+}

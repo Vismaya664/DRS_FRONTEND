@@ -1,0 +1,240 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
+
+// ── Variables ──────────────────────────────────────────────
+$pill-bg:     #1a1a1a;
+$pill-border: rgba(255,255,255,0.08);
+$orange:      #e84c0e;
+$orange-dark: #c73d08;
+$white:       #ffffff;
+$text-muted:  rgba(255, 255, 255, 0.70);
+$navbar-h:    72px;
+
+// ── Navbar wrapper ─────────────────────────────────────────
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  height: $navbar-h;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  padding: 0 2rem;
+  transition: padding 0.3s ease;
+}
+
+// ── Spacer ─────────────────────────────────────────────────
+.navbar-spacer {
+  height: $navbar-h;
+}
+
+// ── Inner pill container ───────────────────────────────────
+.navbar-inner {
+  width: 100%;
+  max-width: 1320px;
+  margin: 0 auto;
+  height: 52px;
+  background: $pill-bg;
+  border: 1px solid $pill-border;
+  border-radius: 100px;
+  box-shadow: 0 4px 32px rgba(0,0,0,0.35), 0 1px 0 rgba(255,255,255,0.05) inset;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  padding: 0 8px 0 16px;
+  gap: 0;
+}
+
+// ── Brand ──────────────────────────────────────────────────
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  padding: 0 8px 0 4px;
+  flex-shrink: 0;
+}
+
+.navbar-logo {
+  height: 32px;
+  width: 32px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.navbar-name {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: $white;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+
+  em {
+    font-style: normal;
+    color: $orange;
+    font-weight: 500;
+  }
+}
+
+// ── Nav Links (center) ────────────────────────────────────
+.navbar-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-link {
+  display: inline-block;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: $text-muted;
+  text-decoration: none;
+  padding: 6px 16px;
+  border-radius: 100px;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+  transition: color 0.18s ease, background 0.18s ease;
+
+  &:hover {
+    color: $white;
+    background: rgba(255,255,255,0.08);
+  }
+
+  &.active {
+    color: $white;
+    font-weight: 600;
+    background: rgba(255,255,255,0.10);
+  }
+}
+
+.navbar-link--badge {
+  // inherits .navbar-link — no overrides needed
+}
+
+// ── CTA Button ─────────────────────────────────────────────
+.navbar-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: $orange;
+  color: $white;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 0 18px;
+  height: 36px;
+  border-radius: 100px;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  flex-shrink: 0;
+  transition: background 0.18s ease, transform 0.15s ease;
+
+  svg {
+    flex-shrink: 0;
+    opacity: 0.9;
+  }
+
+  &:hover {
+    background: $orange-dark;
+    transform: scale(1.02);
+  }
+  &:active {
+    background: #a83207;
+    transform: scale(0.98);
+  }
+}
+
+// ── Hamburger ──────────────────────────────────────────────
+.navbar-hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+
+  span {
+    display: block;
+    width: 20px;
+    height: 2px;
+    background: $white;
+    border-radius: 2px;
+    transition: transform 0.25s, opacity 0.25s;
+  }
+
+  &.open {
+    span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    span:nth-child(2) { opacity: 0; }
+    span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  }
+}
+
+// ── Transparent modifier (hero overlap) ───────────────────
+.navbar--transparent .navbar-inner {
+  background: rgba(20, 20, 20, 0.70);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+// ── Responsive ─────────────────────────────────────────────
+@media (max-width: 900px) {
+  .navbar {
+    padding: 0 1rem;
+  }
+
+  .navbar-inner {
+    grid-template-columns: auto auto;
+    justify-content: space-between;
+    border-radius: 14px;
+    padding: 0 8px 0 12px;
+  }
+
+  .navbar-links {
+    display: none;
+    position: fixed;
+    top: $navbar-h;
+    left: 1rem;
+    right: 1rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    background: $pill-bg;
+    border: 1px solid $pill-border;
+    border-radius: 16px;
+    padding: 10px 10px 16px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.45);
+
+    &.open { display: flex; }
+
+    li { width: 100%; }
+
+    .navbar-link {
+      display: block;
+      width: 100%;
+      padding: 10px 14px;
+      font-size: 0.95rem;
+      border-radius: 10px;
+      color: $text-muted !important;
+
+      &.active {
+        background: rgba(255,255,255,0.10);
+        color: $white !important;
+      }
+    }
+  }
+
+  .navbar-cta       { display: none; }
+  .navbar-hamburger { display: flex; }
+}
