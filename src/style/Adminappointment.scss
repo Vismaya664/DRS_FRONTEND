@@ -198,6 +198,7 @@ $sh3:   0 8px 24px rgba(0,0,0,.14);
 
     &--blue   { background: rgba(76,155,232,.18);  color: #4C9BE8; }
     &--green  { background: rgba(52,211,153,.15);  color: #34D399; }
+    &--yellow { background: rgba(251,191,36,.15);  color: #FBBF24; }
     &--amber  { background: rgba(251,191,36,.15);  color: #FBBF24; }
     &--red    { background: rgba(248,113,113,.15); color: #F87171; }
   }
@@ -208,8 +209,9 @@ $sh3:   0 8px 24px rgba(0,0,0,.14);
     padding: 2px 7px;
     border-radius: 4px;
 
-    &--up   { background: rgba(52,211,153,.15); color: #34D399; }
-    &--down { background: rgba(251,191,36,.15); color: #FBBF24; }
+    &--up      { background: rgba(52,211,153,.15); color: #34D399; }
+    &--down    { background: rgba(251,191,36,.15); color: #FBBF24; }
+    &--neutral { background: rgba(251,191,36,.15); color: #FBBF24; }
   }
 
   &__value {
@@ -458,8 +460,10 @@ $sh3:   0 8px 24px rgba(0,0,0,.14);
   white-space: nowrap;
 
   &--green  { background: #DCFCE7; color: #15803D; }
+  &--yellow { background: #FEF3C7; color: #B45309; }
   &--amber  { background: #FEF3C7; color: #B45309; }
   &--red    { background: #FEE2E2; color: #B91C1C; }
+  &--gray   { background: #F1F5F9; color: #64748B; }
 }
 
 // Row actions

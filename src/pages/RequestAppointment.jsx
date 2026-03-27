@@ -258,7 +258,7 @@ function SlotModal({ groups, initSlotKey, onConfirm, onClose, appointmentDate })
                 onClick={() => switchGroup(g.slno)}>
                 <span className="token-tab__name">{g.label}</span>
                 <span className="token-tab__time">{g.timeRange}</span>
-                <span className="token-tab__count">{vacantCount} open</span>
+                <span className="token-tab__count">{vacantCount} available</span>
               </button>
             );
           })}
@@ -279,6 +279,16 @@ function SlotModal({ groups, initSlotKey, onConfirm, onClose, appointmentDate })
               const key        = `${s.slot_number}_${s.start_time}`;
               const isBooked   = s.status === 'Booked';
               const isSelected = selectedKey === key;
+              
+              // Debug logging
+              if (s.start_time === '09:00' || s.start_time === '09:07') {
+                console.log(`[DEBUG] Slot ${s.start_time}:`, {
+                  status: s.status,
+                  isBooked,
+                  slot_number: s.slot_number
+                });
+              }
+              
               return (
                 <button key={key} type="button"
                   disabled={isBooked}
@@ -290,7 +300,7 @@ function SlotModal({ groups, initSlotKey, onConfirm, onClose, appointmentDate })
                   ].join(" ").trim()}>
                   <span className="slot-chip__time">{formatTime(s.start_time)}</span>
                   <span className="slot-chip__label">
-                    {isBooked ? "Booked" : isSelected ? "Selected" : "Open"}
+                    {isBooked ? "Booked" : isSelected ? "Selected" : "Available"}
                   </span>
                 </button>
               );
@@ -390,7 +400,11 @@ export default function RequestAppointment() {
     setSelectedSlotData(null); // clear stale selection
     try {
       const raw = await getDoctorSlots({ doctor_code: doctorCode, date });
-      setSlotGroups(groupSlotsByTiming(raw));
+      console.log('[DEBUG] Raw slots from API:', raw);
+      console.log('[DEBUG] First 3 slots:', raw.slice(0, 3));
+      const grouped = groupSlotsByTiming(raw);
+      console.log('[DEBUG] Grouped slots:', grouped);
+      setSlotGroups(grouped);
     } catch (err) {
       console.error('Failed to fetch slots:', err);
       setToast('Could not load available slots. Please try again.');
@@ -444,10 +458,19 @@ export default function RequestAppointment() {
     if (Object.keys(errs).length) { setErrors(errs); return; }
     setSubmitting(true);
     try {
-      // Combine date + slot's start_time into the appointment datetime
-      const appointmentDateTime = new Date(
-        `${form.appointmentDate}T${selectedSlotData.start_time}:00`
-      );
+      // Combine date + slot's start_time into UTC datetime for backend
+      // Parse the date and time carefully to avoid timezone issues
+      const [year, month, day] = form.appointmentDate.split('-').map(Number);
+      const [hours, minutes] = selectedSlotData.start_time.split(':').map(Number);
+      
+      // Create UTC datetime directly (not local time converted to UTC)
+      const appointmentDateTime = new Date(Date.UTC(year, month - 1, day, hours, minutes, 0));
+      
+      console.log('[DEBUG] Booking appointment:');
+      console.log('  Selected date:', form.appointmentDate);
+      console.log('  Selected time:', selectedSlotData.start_time);
+      console.log('  UTC DateTime:', appointmentDateTime.toISOString());
+      
       await bookAppointment({
         patient_name:     form.firstName.trim(),
         doctor_code:      form.doctorCode,

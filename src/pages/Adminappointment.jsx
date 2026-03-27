@@ -7,7 +7,6 @@ const initialAppointments = []
 
 const statusConfig = {
   accepted: { label: 'Accepted', color: 'green' },
-  pending:   { label: 'Pending',   color: 'amber' },
   rejected: { label: 'Rejected', color: 'red'   },
 }
 
@@ -20,17 +19,6 @@ const statusOptions = [
     icon: (
       <svg viewBox="0 0 20 20" fill="currentColor" width="22" height="22">
         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-      </svg>
-    ),
-  },
-  {
-    key: 'pending',
-    label: 'Pending',
-    desc: 'Awaiting confirmation or review',
-    bg: '#FFFBEB', border: '#FCD34D', iconBg: '#FEF3C7', iconColor: '#B45309',
-    icon: (
-      <svg viewBox="0 0 20 20" fill="currentColor" width="22" height="22">
-        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
       </svg>
     ),
   },
@@ -51,11 +39,12 @@ const DEPARTMENTS = []
 const DOCTORS     = []
 const TYPES       = ['Consultation', 'Follow-up', 'Check-up', 'New Patient', 'Surgery Prep', 'Emergency']
 
-const emptyForm = { patient: '', doctor: '', department: '', date: '', time: '', type: '', status: 'pending' }
+const emptyForm = { patient: '', doctor: '', department: '', date: '', time: '', type: '', status: 'accepted' }
 
 function generateId(list) {
-  const nums = list.map(a => parseInt(a.id.replace('APT-', ''), 10))
-  return `APT-${String(Math.max(...nums) + 1).padStart(3, '0')}`
+  // Generate next sequential ID
+  const maxId = list.length > 0 ? Math.max(...list.map(a => a.id)) : 0
+  return maxId + 1
 }
 
 export default function AdminAppointment() {
@@ -81,30 +70,49 @@ export default function AdminAppointment() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        console.log('[DEBUG] Fetching admin appointments...')
         setError(null)
-        const [appointmentsData, deptData] = await Promise.all([
-          getAdminAppointments(),
-          getDepartments()
-        ])
+        const appointmentsData = await getAdminAppointments();
+        const deptData = await getDepartments();
         
-        setAppointments(appointmentsData.map(apt => ({
-          id: `APT-${apt.id}`,
-          patient: apt.patient_name,
-          doctor: apt.doctor_name || apt.doctor_code,
-          department: apt.department_name || apt.department_code,
-          date: new Date(apt.appointment_date).toLocaleDateString(),
-          time: apt.appointment_time_range || new Date(apt.appointment_date).toLocaleTimeString(),
-          status: apt.status,
+        console.log('[DEBUG] Received appointments:', appointmentsData)
+        console.log('[DEBUG] Received departments:', deptData)
+        
+        // Ensure we have an array
+        if (!Array.isArray(appointmentsData)) {
+          throw new Error('Appointments data is not an array');
+        }
+        
+        // Sort appointments by creation date (newest first) and assign sequential IDs
+        const sortedApts = appointmentsData.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+        
+        const mappedApts = sortedApts.map((apt, index) => ({
+          id: index + 1,  // Sequential ID: 1, 2, 3...
+          patient: apt.patient_name || 'Unknown',
+          doctor: apt.doctor_name || apt.doctor_code || 'Unknown',
+          department: apt.department_name || apt.department_code || 'Unknown',
+          date: apt.appointment_date ? new Date(apt.appointment_date).toLocaleDateString() : 'N/A',
+          time: apt.appointment_time_range || (apt.appointment_date ? new Date(apt.appointment_date).toLocaleTimeString() : 'N/A'),
+          status: apt.status || 'pending',
           type: 'Consultation',
-          rawId: apt.id
-        })))
+          rawId: apt.id  // Keep original ID for API calls
+        }))
         
-        setDepartments(deptData.map(d => d.name))
+        console.log('[DEBUG] Mapped appointments:', mappedApts)
+        setAppointments(mappedApts)
+        
+        if (Array.isArray(deptData)) {
+          setDepartments(deptData.map(d => d.name))
+        }
+        
+        console.log('[DEBUG] Successfully loaded appointments')
         
       } catch (error) {
-        console.error('Failed to fetch appointments:', error)
-        setError(error.message || 'Failed to load appointments. Please try again.')
+        console.error('[ERROR] Failed to fetch appointments:', error)
+        const errorMsg = error.response?.data?.message || error.message || 'Failed to load appointments. Please try again.'
+        setError(errorMsg)
       } finally {
+        console.log('[DEBUG] Setting loading to false')
         setLoading(false)
       }
     }
@@ -112,18 +120,18 @@ export default function AdminAppointment() {
   }, [])
 
   // ── derived metrics ──────────────────────────────────────────────────────────
+  const pending = appointments.filter(a => a.status === 'pending').length
   const accepted = appointments.filter(a => a.status === 'accepted').length
-  const pending   = appointments.filter(a => a.status === 'pending').length
   const rejected  = appointments.filter(a => a.status === 'rejected').length
   const total     = appointments.length
 
   const metrics = [
     { label: "Today's Total",  value: String(total), sub: `${total} total appointments`, badge: '+12%', badgeType: 'up', iconColor: 'blue', bar: 80, barColor: '#4C9BE8',
       icon: <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16"><path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" /></svg> },
+    { label: 'Pending', value: String(pending), sub: `${total ? Math.round(pending/total*100) : 0}% of total`, badge: `${pending}`, badgeType: 'neutral', iconColor: 'yellow', bar: total ? Math.round(pending/total*100) : 0, barColor: '#FBBF24',
+      icon: <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" /></svg> },
     { label: 'Accepted', value: String(accepted), sub: `${total ? Math.round(accepted/total*100) : 0}% of total`, badge: `${total ? Math.round(accepted/total*100) : 0}%`, badgeType: 'up', iconColor: 'green', bar: total ? Math.round(accepted/total*100) : 0, barColor: '#34D399',
       icon: <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg> },
-    { label: 'Pending', value: String(pending), sub: 'Awaiting confirmation', badge: `${total ? Math.round(pending/total*100) : 0}%`, badgeType: 'down', iconColor: 'amber', bar: total ? Math.round(pending/total*100) : 0, barColor: '#FBBF24',
-      icon: <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" /></svg> },
     { label: 'Rejected', value: String(rejected), sub: `${total ? Math.round(rejected/total*100) : 0}% of total`, badge: `-${rejected}`, badgeType: 'down', iconColor: 'red', bar: total ? Math.round(rejected/total*100) : 0, barColor: '#F87171',
       icon: <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" /></svg> },
   ]
@@ -131,7 +139,7 @@ export default function AdminAppointment() {
   const filtered = appointments.filter(a => {
     const q = search.toLowerCase()
     return (
-      (a.patient.toLowerCase().includes(q) || a.doctor.toLowerCase().includes(q) || a.id.toLowerCase().includes(q)) &&
+      (a.patient.toLowerCase().includes(q) || a.doctor.toLowerCase().includes(q) || String(a.id).includes(q)) &&
       (filterStatus === 'all' || a.status === filterStatus)
     )
   })
@@ -175,7 +183,7 @@ export default function AdminAppointment() {
       const [h, m] = form.time.split(':').map(Number)
       displayTime = `${String(h % 12 || 12).padStart(2,'0')}:${String(m).padStart(2,'0')} ${h >= 12 ? 'PM' : 'AM'}`
     }
-    setAppointments(prev => [{ id: generateId(prev), patient: form.patient.trim(), doctor: form.doctor, department: form.department, date: form.date, time: displayTime, type: form.type, status: form.status }, ...prev])
+    setAppointments(prev => [{ id: generateId(prev), patient: form.patient.trim(), doctor: form.doctor, department: form.department, date: form.date, time: displayTime, type: form.type, status: form.status, rawId: null }, ...prev])
     closeModal()
   }
 
@@ -184,7 +192,7 @@ export default function AdminAppointment() {
     e.stopPropagation()
     setPickedStatus(apt.status)
     setStatusSaved(false)
-    setStatusModal({ aptId: apt.id, current: apt.status, patient: apt.patient })
+    setStatusModal({ aptId: apt.id, rawId: apt.rawId, current: apt.status, patient: apt.patient })
   }
 
   function closeStatusModal() { setStatusModal(null); setPickedStatus(null); setStatusSaved(false) }
@@ -192,7 +200,7 @@ export default function AdminAppointment() {
   function confirmStatusChange() {
     if (!pickedStatus || pickedStatus === statusModal.current) { closeStatusModal(); return }
     
-    const aptId = parseInt(statusModal.aptId.replace('APT-', ''))
+    const aptId = statusModal.rawId  // Use rawId for API call
     updateAppointmentStatus(aptId, pickedStatus)
       .then(() => {
         setAppointments(prev => prev.map(a => a.id === statusModal.aptId ? { ...a, status: pickedStatus } : a))
@@ -207,7 +215,7 @@ export default function AdminAppointment() {
 
   function handleDeleteAppointment(apt) {
     if (window.confirm(`Are you sure you want to delete the appointment for ${apt.patient}?`)) {
-      const aptId = parseInt(apt.id.replace('APT-', ''))
+      const aptId = apt.rawId  // Use rawId for API call
       deleteAppointment(aptId)
         .then(() => {
           setAppointments(prev => prev.filter(a => a.id !== apt.id))
@@ -305,7 +313,7 @@ export default function AdminAppointment() {
                 <input placeholder="Search patient, doctor…" value={search} onChange={e => setSearch(e.target.value)} />
               </div>
               <div className="ap-filters">
-                {['all', 'accepted', 'pending', 'rejected'].map(s => (
+                {['all', 'pending', 'accepted', 'rejected'].map(s => (
                   <button key={s} className={`ap-filter-btn ${filterStatus === s ? 'ap-filter-btn--on' : ''}`} onClick={() => setFilter(s)}>
                     {s.charAt(0).toUpperCase() + s.slice(1)}
                   </button>
@@ -326,11 +334,11 @@ export default function AdminAppointment() {
                   {filtered.length === 0 ? (
                     <tr><td colSpan="8" className="ap-empty">No appointments found</td></tr>
                   ) : filtered.map((a, index) => {
-                    const sc = statusConfig[a.status]
+                    const sc = statusConfig[a.status] || { label: a.status, color: 'gray' }
                     return (
                       <tr key={a.id} className={selected === a.id ? 'ap-row--selected' : ''} onClick={() => setSelected(a.id === selected ? null : a.id)}>
-                        {/* ── CHANGED: shows row number instead of APT-xxx ── */}
-                        <td><span className="ap-id">{index + 1}</span></td>
+                        {/* ── Shows sequential ID: 1, 2, 3... ── */}
+                        <td><span className="ap-id">{a.id}</span></td>
                         <td>
                           <div className="ap-patient">
                             <div className="ap-avatar">{a.patient.split(' ').map(n => n[0]).join('')}</div>
@@ -429,8 +437,8 @@ export default function AdminAppointment() {
 
                 <div className="ap-smodal__current">
                   <span className="ap-smodal__current-label">Current status</span>
-                  <span className={`ap-loz ap-loz--${statusConfig[statusModal.current].color}`}>
-                    {statusConfig[statusModal.current].label}
+                  <span className={`ap-loz ap-loz--${(statusConfig[statusModal.current] || { color: 'gray' }).color}`}>
+                    {(statusConfig[statusModal.current] || { label: statusModal.current }).label}
                   </span>
                 </div>
 

@@ -88,8 +88,12 @@ export default function Appointments() {
         const doctorCode = localStorage.getItem('doctorCode');
         if (doctorCode) {
           const data = await getDoctorAppointments(doctorCode);
-          const formatted = data.map(apt => ({
-            id: apt.id,
+          // Sort by created_at (newest first)
+          const sorted = data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+          // Assign sequential IDs
+          const formatted = sorted.map((apt, index) => ({
+            id: index + 1,
+            rawId: apt.id,  // Keep original ID for API calls
             name: apt.patient_name,
             phone: apt.phone_number || 'N/A',
             email: apt.email || 'N/A',
@@ -138,11 +142,11 @@ export default function Appointments() {
 
   const uniqueDepts = [...new Set(appointments.map(r => r.dept))].sort();
 
-  const handleDelete = async (appointmentId) => {
+  const handleDelete = async (appointment) => {
     if (window.confirm('Are you sure you want to delete this appointment?')) {
       try {
-        await deleteAppointment(appointmentId);
-        setAppointments(prev => prev.filter(apt => apt.id !== appointmentId));
+        await deleteAppointment(appointment.rawId);
+        setAppointments(prev => prev.filter(apt => apt.id !== appointment.id));
       } catch (error) {
         console.error('Failed to delete appointment:', error);
         alert('Failed to delete appointment. Please try again.');
@@ -273,7 +277,7 @@ export default function Appointments() {
                         <td>
                           <div className="ap-row-actions">
                             <button className="ap-row-btn" title="View"><EyeIcon /></button>
-                            <button className="ap-row-btn" title="Delete" onClick={() => handleDelete(row.id)}><TrashIcon /></button>
+                            <button className="ap-row-btn" title="Delete" onClick={() => handleDelete(row)}><TrashIcon /></button>
                           </div>
                         </td>
                       </tr>
