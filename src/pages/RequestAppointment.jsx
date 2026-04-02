@@ -463,16 +463,21 @@ export default function RequestAppointment() {
       const [year, month, day] = form.appointmentDate.split('-').map(Number);
       const [hours, minutes] = selectedSlotData.start_time.split(':').map(Number);
       
-      // Create UTC datetime directly (not local time converted to UTC)
-      const appointmentDateTime = new Date(Date.UTC(year, month - 1, day, hours, minutes, 0));
+      // Selected time is in IST (India Standard Time = UTC+5:30)
+      // Create UTC date by treating IST time as UTC, then subtract IST offset
+      // This ensures the final UTC time correctly represents IST time
+      const istAsUtcDate = new Date(Date.UTC(year, month - 1, day, hours, minutes, 0));
+      const istOffsetMs = (5 * 60 + 30) * 60 * 1000; // 5.5 hours in milliseconds
+      const appointmentDateTime = new Date(istAsUtcDate.getTime() - istOffsetMs);
       
       console.log('[DEBUG] Booking appointment:');
       console.log('  Selected date:', form.appointmentDate);
-      console.log('  Selected time:', selectedSlotData.start_time);
-      console.log('  UTC DateTime:', appointmentDateTime.toISOString());
+      console.log('  Selected time (IST):', selectedSlotData.start_time);
+      console.log('  Converted UTC DateTime:', appointmentDateTime.toISOString());
       
       await bookAppointment({
         patient_name:     form.firstName.trim(),
+        phone_number:     form.mobile.trim(),
         doctor_code:      form.doctorCode,
         department_code:  form.speciality,
         appointment_date: appointmentDateTime.toISOString(),

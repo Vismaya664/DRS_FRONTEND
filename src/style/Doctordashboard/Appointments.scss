@@ -327,13 +327,15 @@
 // Horizontal scroll wrapper inside the card
 .ap-table-scroll {
   overflow-x: auto;
-  overflow-y: visible;
+  overflow-y: auto;
   width: 100%;
+  max-height: 600px;
+  position: relative;
 
   scrollbar-width: thin;
   scrollbar-color: var(--ap-border) transparent;
 
-  &::-webkit-scrollbar        { height: 5px; }
+  &::-webkit-scrollbar        { width: 6px; height: 6px; }
   &::-webkit-scrollbar-track  { background: transparent; }
   &::-webkit-scrollbar-thumb  { background: var(--ap-border); border-radius: 4px; }
   &::-webkit-scrollbar-thumb:hover { background: #B3BFCC; }

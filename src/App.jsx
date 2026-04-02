@@ -10,13 +10,13 @@ import DoctorAppointments from './pages/Doctorsdashboard/Appointments'
 import OurTeam from './pages/Ourteam'
 import RequestAppointment from './pages/RequestAppointment'
 
-function App() {
+function App() {     
   return (
     <BrowserRouter>
       <Routes>
         {/* Public patient-facing home */}
         <Route path="/"                        element={<Home />} />
-
+ 
         {/* Our Team page */}
         <Route path="/our-team"                element={<OurTeam />} />
 

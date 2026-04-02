@@ -39,7 +39,7 @@ const DEPARTMENTS = []
 const DOCTORS     = []
 const TYPES       = ['Consultation', 'Follow-up', 'Check-up', 'New Patient', 'Surgery Prep', 'Emergency']
 
-const emptyForm = { patient: '', doctor: '', department: '', date: '', time: '', type: '', status: 'accepted' }
+const emptyForm = { patient: '', phone: '', doctor: '', department: '', date: '', time: '', type: '', status: 'accepted' }
 
 function generateId(list) {
   // Generate next sequential ID
@@ -89,6 +89,7 @@ export default function AdminAppointment() {
         const mappedApts = sortedApts.map((apt, index) => ({
           id: index + 1,  // Sequential ID: 1, 2, 3...
           patient: apt.patient_name || 'Unknown',
+          phone: apt.phone_number || 'N/A',
           doctor: apt.doctor_name || apt.doctor_code || 'Unknown',
           department: apt.department_name || apt.department_code || 'Unknown',
           date: apt.appointment_date ? new Date(apt.appointment_date).toLocaleDateString() : 'N/A',
@@ -120,20 +121,20 @@ export default function AdminAppointment() {
   }, [])
 
   // ── derived metrics ──────────────────────────────────────────────────────────
-  const pending = appointments.filter(a => a.status === 'pending').length
   const accepted = appointments.filter(a => a.status === 'accepted').length
   const rejected  = appointments.filter(a => a.status === 'rejected').length
   const total     = appointments.length
+  const acceptanceRate = total ? Math.round(accepted/total*100) : 0
 
   const metrics = [
     { label: "Today's Total",  value: String(total), sub: `${total} total appointments`, badge: '+12%', badgeType: 'up', iconColor: 'blue', bar: 80, barColor: '#4C9BE8',
       icon: <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16"><path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" /></svg> },
-    { label: 'Pending', value: String(pending), sub: `${total ? Math.round(pending/total*100) : 0}% of total`, badge: `${pending}`, badgeType: 'neutral', iconColor: 'yellow', bar: total ? Math.round(pending/total*100) : 0, barColor: '#FBBF24',
-      icon: <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" /></svg> },
     { label: 'Accepted', value: String(accepted), sub: `${total ? Math.round(accepted/total*100) : 0}% of total`, badge: `${total ? Math.round(accepted/total*100) : 0}%`, badgeType: 'up', iconColor: 'green', bar: total ? Math.round(accepted/total*100) : 0, barColor: '#34D399',
       icon: <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg> },
     { label: 'Rejected', value: String(rejected), sub: `${total ? Math.round(rejected/total*100) : 0}% of total`, badge: `-${rejected}`, badgeType: 'down', iconColor: 'red', bar: total ? Math.round(rejected/total*100) : 0, barColor: '#F87171',
       icon: <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" /></svg> },
+    { label: 'Acceptance Rate', value: `${acceptanceRate}%`, sub: `${accepted} of ${total} approved`, badge: acceptanceRate >= 75 ? '↑ High' : acceptanceRate >= 50 ? '→ Moderate' : '↓ Low', badgeType: acceptanceRate >= 75 ? 'up' : acceptanceRate >= 50 ? 'neutral' : 'down', iconColor: 'purple', bar: acceptanceRate, barColor: '#A78BFA',
+      icon: <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16"><path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" /></svg> },
   ]
 
   const filtered = appointments.filter(a => {
@@ -313,7 +314,7 @@ export default function AdminAppointment() {
                 <input placeholder="Search patient, doctor…" value={search} onChange={e => setSearch(e.target.value)} />
               </div>
               <div className="ap-filters">
-                {['all', 'pending', 'accepted', 'rejected'].map(s => (
+                {['all', 'accepted', 'rejected'].map(s => (
                   <button key={s} className={`ap-filter-btn ${filterStatus === s ? 'ap-filter-btn--on' : ''}`} onClick={() => setFilter(s)}>
                     {s.charAt(0).toUpperCase() + s.slice(1)}
                   </button>
@@ -326,13 +327,13 @@ export default function AdminAppointment() {
                 <thead>
                   <tr>
                     {/* ── CHANGED: ID → No. ── */}
-                    <th>No.</th><th>Patient</th><th>Doctor</th><th>Department</th>
+                    <th>No.</th><th>Patient</th><th>Phone</th><th>Doctor</th><th>Department</th>
                     <th>Date & Time</th><th>Type</th><th>Status</th><th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {filtered.length === 0 ? (
-                    <tr><td colSpan="8" className="ap-empty">No appointments found</td></tr>
+                    <tr><td colSpan="9" className="ap-empty">No appointments found</td></tr>
                   ) : filtered.map((a, index) => {
                     const sc = statusConfig[a.status] || { label: a.status, color: 'gray' }
                     return (
@@ -345,6 +346,7 @@ export default function AdminAppointment() {
                             {a.patient}
                           </div>
                         </td>
+                        <td className="ap-phone">{a.phone}</td>
                         <td className="ap-doctor">{a.doctor}</td>
                         <td><span className="ap-dept">{a.department}</span></td>
                         <td>

@@ -55,7 +55,7 @@ const EmptyIcon = () => (
 
 const APPOINTMENTS_DATA = [];
 
-const ROWS_PER_PAGE = 20;
+const ROWS_PER_PAGE = 7;
 
 const STATUS_COLORS = {
   pending:   "#D97706",
