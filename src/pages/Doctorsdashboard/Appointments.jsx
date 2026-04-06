@@ -98,7 +98,10 @@ export default function Appointments() {
             phone: apt.phone_number || 'N/A',
             email: apt.email || 'N/A',
             dept: apt.department_name || apt.department_code,
-            apptDate: new Date(apt.appointment_date).toLocaleDateString(),
+            apptDate: (() => {
+              const d = new Date(apt.appointment_date);
+              return `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
+            })(),
             apptTime: apt.appointment_time_range || new Date(apt.appointment_date).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
             status: apt.status,
             bookedOn: new Date(apt.created_at).toLocaleDateString()

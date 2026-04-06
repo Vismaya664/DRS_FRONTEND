@@ -86,18 +86,23 @@ export default function AdminAppointment() {
         // Sort appointments by creation date (newest first) and assign sequential IDs
         const sortedApts = appointmentsData.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
         
-        const mappedApts = sortedApts.map((apt, index) => ({
-          id: index + 1,  // Sequential ID: 1, 2, 3...
-          patient: apt.patient_name || 'Unknown',
-          phone: apt.phone_number || 'N/A',
-          doctor: apt.doctor_name || apt.doctor_code || 'Unknown',
-          department: apt.department_name || apt.department_code || 'Unknown',
-          date: apt.appointment_date ? new Date(apt.appointment_date).toLocaleDateString() : 'N/A',
-          time: apt.appointment_time_range || (apt.appointment_date ? new Date(apt.appointment_date).toLocaleTimeString() : 'N/A'),
-          status: apt.status || 'pending',
-          type: 'Consultation',
-          rawId: apt.id  // Keep original ID for API calls
-        }))
+        const mappedApts = sortedApts.map((apt, index) => {
+          const dateObj = apt.appointment_date ? new Date(apt.appointment_date) : null
+          const formattedDate = dateObj ? `${dateObj.getDate()}/${dateObj.getMonth() + 1}/${dateObj.getFullYear()}` : 'N/A'
+          
+          return {
+            id: index + 1,  // Sequential ID: 1, 2, 3...
+            patient: apt.patient_name || 'Unknown',
+            phone: apt.phone_number || 'N/A',
+            doctor: apt.doctor_name || apt.doctor_code || 'Unknown',
+            department: apt.department_name || apt.department_code || 'Unknown',
+            date: formattedDate,
+            time: apt.appointment_time_range || (apt.appointment_date ? new Date(apt.appointment_date).toLocaleTimeString() : 'N/A'),
+            status: apt.status || 'pending',
+            type: 'Consultation',
+            rawId: apt.id  // Keep original ID for API calls
+          }
+        })
         
         console.log('[DEBUG] Mapped appointments:', mappedApts)
         setAppointments(mappedApts)
