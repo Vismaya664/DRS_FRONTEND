@@ -831,6 +831,11 @@ $r-xl:        16px;
     border-style: dashed;
     opacity: 0.6;
   }
+  &--soon {
+    background: $subtle;
+    border-color: $subtle;
+    opacity: 0.5;
+  }
 }
 
 // ── Slot Modal ────────────────────────────────────────────────────────────
@@ -931,6 +936,15 @@ $r-xl:        16px;
       border-radius: $r-md;
       pointer-events: none;
     }
+  }
+
+  &--soon {
+    background: linear-gradient(135deg, #f5f3ef 0%, #faf9f7 100%);
+    border: 1.5px solid $border;
+    cursor: not-allowed;
+    opacity: 0.6;
+    .slot-chip__time  { color: $subtle; font-weight: 500; }
+    .slot-chip__label { color: $subtle; font-weight: 600; }
   }
 }
 

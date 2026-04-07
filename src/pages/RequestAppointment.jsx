@@ -23,6 +23,50 @@ function formatTime(t) {
   return `${hour}:${String(m).padStart(2,"0")} ${ampm}`;
 }
 
+// Check if a time slot is disabled (within 1 hour from current time)
+// Parameters: slotStartTime (HH:MM format), appointmentDate (YYYY-MM-DD format)
+// Returns: true if the slot is within 1 hour from now or in the past, false if it's available
+function isSlotDisabled(slotStartTime, appointmentDate) {
+  if (!slotStartTime || !appointmentDate) return false;
+  
+  // Get today's date
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  
+  // Parse the appointment date
+  const [year, month, day] = appointmentDate.split('-').map(Number);
+  const appointmentDayDate = new Date(year, month - 1, day);
+  appointmentDayDate.setHours(0, 0, 0, 0);
+  
+  // If appointment date is in the future, all slots are available
+  if (appointmentDayDate > today) {
+    return false;
+  }
+  
+  // If appointment date is in the past (before today), all slots are disabled
+  if (appointmentDayDate < today) {
+    return true;
+  }
+  
+  // If appointment date is TODAY, check if slot is within 1 hour from now
+  const now = new Date();
+  const currentHours = now.getHours();
+  const currentMinutes = now.getMinutes();
+  
+  // Parse slot start time (24-hour format)
+  const [slotHours, slotMinutes] = slotStartTime.split(':').map(Number);
+  
+  // Convert both to minutes for easy comparison
+  const currentTimeInMinutes = currentHours * 60 + currentMinutes;
+  const slotTimeInMinutes = slotHours * 60 + slotMinutes;
+  
+  // Calculate cutoff time (current time + 1 hour = 60 minutes)
+  const oneHourFromNowInMinutes = currentTimeInMinutes + 60;
+  
+  // Disable slots that are less than 1 hour in advance
+  return slotTimeInMinutes < oneHourFromNowInMinutes;
+}
+
 // Group flat slot list from backend into tab groups by slot_number (DoctorTiming.slno)
 // Returns: [{ slno, label, timeRange, slots: [...] }, ...]
 function groupSlotsByTiming(rawSlots) {
@@ -165,12 +209,32 @@ function SlotModal({ groups, initSlotKey, onConfirm, onClose, appointmentDate })
   // selectedKey = "slno_start_time" uniquely identifies a specific slot
   const [selectedKey, setSelectedKey] = useState(initSlotKey || null);
   const ref = useRef(null);
+  const slotGridRef = useRef(null);
 
   useEffect(() => {
     const h = e => { if (ref.current && !ref.current.contains(e.target)) onClose(); };
     document.addEventListener("mousedown", h);
     return () => document.removeEventListener("mousedown", h);
   }, [onClose]);
+
+  // Auto-scroll to first available slot when modal opens or group changes
+  useEffect(() => {
+    if (slotGridRef.current) {
+      // Small delay to ensure DOM is ready
+      setTimeout(() => {
+        const buttons = slotGridRef.current?.querySelectorAll('.slot-chip');
+        if (buttons && buttons.length > 0) {
+          // Find first non-disabled button (available slot)
+          for (let btn of buttons) {
+            if (!btn.disabled) {
+              btn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              break;
+            }
+          }
+        }
+      }, 50);
+    }
+  }, [activeGroup, groups]);
 
   const currentGroup = groups.find(g => g.slno === activeGroup);
 
@@ -186,6 +250,7 @@ function SlotModal({ groups, initSlotKey, onConfirm, onClose, appointmentDate })
 
   const pickSlot = s => {
     if (s.status === 'Booked') return;
+    if (isSlotDisabled(s.start_time, appointmentDate)) return;
     setSelectedKey(`${s.slot_number}_${s.start_time}`);
   };
 
@@ -271,36 +336,31 @@ function SlotModal({ groups, initSlotKey, onConfirm, onClose, appointmentDate })
             <span className="token-legend__item"><span className="tl-dot tl-dot--open"/> Available</span>
             <span className="token-legend__item"><span className="tl-dot tl-dot--sel"/> Selected</span>
             <span className="token-legend__item"><span className="tl-dot tl-dot--booked"/> Booked</span>
+            <span className="token-legend__item"><span className="tl-dot tl-dot--soon"/> Past</span>
           </div>
 
           {/* Time slot chips */}
-          <div className="slot-grid">
+          <div className="slot-grid" ref={slotGridRef}>
             {currentGroup?.slots.map(s => {
               const key        = `${s.slot_number}_${s.start_time}`;
               const isBooked   = s.status === 'Booked';
               const isSelected = selectedKey === key;
-              
-              // Debug logging
-              if (s.start_time === '09:00' || s.start_time === '09:07') {
-                console.log(`[DEBUG] Slot ${s.start_time}:`, {
-                  status: s.status,
-                  isBooked,
-                  slot_number: s.slot_number
-                });
-              }
+              const isDisabled = isSlotDisabled(s.start_time, appointmentDate);
               
               return (
                 <button key={key} type="button"
-                  disabled={isBooked}
+                  disabled={isBooked || isDisabled}
                   onClick={() => pickSlot(s)}
                   className={[
                     "slot-chip",
                     isBooked   ? "slot-chip--booked"   : "",
+                    isDisabled ? "slot-chip--soon"     : "",
                     isSelected ? "slot-chip--selected"  : "",
-                  ].join(" ").trim()}>
+                  ].join(" ").trim()}
+                  title={isDisabled ? "Book at least 1 hour in advance" : isBooked ? "This slot is booked" : ""}>
                   <span className="slot-chip__time">{formatTime(s.start_time)}</span>
                   <span className="slot-chip__label">
-                    {isBooked ? "Booked" : isSelected ? "Selected" : "Available"}
+                    {isDisabled ? "Too Soon" : isBooked ? "Booked" : isSelected ? "Selected" : "Available"}
                   </span>
                 </button>
               );
