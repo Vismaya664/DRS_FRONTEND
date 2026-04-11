@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { getAllDoctors, getDepartments, bookAppointment, getDoctorSlots } from "../api/api";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -394,6 +394,12 @@ function SlotModal({ groups, initSlotKey, onConfirm, onClose, appointmentDate })
 // ── Main Component ────────────────────────────────────────────────────────
 export default function RequestAppointment() {
   const { state } = useLocation();
+  const navigate = useNavigate();
+
+  // ✅ SCROLL TO TOP ON MOUNT
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const [doctors,     setDoctors]     = useState([]);
   const [departments, setDepartments] = useState([]);
@@ -567,6 +573,8 @@ export default function RequestAppointment() {
       firstName:       "",
       mobile:          ""
     });
+    // Navigate to home page
+    navigate("/");
   };
 
   const slotBtnText = selectedSlotData

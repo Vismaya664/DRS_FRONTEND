@@ -12,23 +12,39 @@ import d4 from "../assets/d4.jpg";
 import d5 from "../assets/d5.jpg";
 import d6 from "../assets/d6.jpg";
 import d7 from "../assets/d7.jpg";
+import d8 from "../assets/d8.jpg";
+import d9 from "../assets/d9.jpg";
+import d10 from "../assets/d10.jpg";
+import d11 from "../assets/d11.jpg";
+import d12 from "../assets/d12.jpg";
+import d13 from "../assets/d13.jpg";
+import d14 from "../assets/d14.jpg";
+import d15 from "../assets/d15.jpg";
+import d16 from "../assets/d16.jpg";
+import d17 from "../assets/d17.jpg";
+import d18 from "../assets/d18.jpg";
+import d19 from "../assets/d19.jpg";
 import bannerBg from "../assets/Banner.jpg";
 import storyImg from "../assets/story.jpg";
 
-// ── Doctors data ───────────────────────────────────────────────────────────
 const DOCTORS = [
-  { name: "Dr. Anil Kumar",       specialization: "General Medicine",         qualification: "MBBS, MD (Internal Medicine)",  clinic: "Doctors United Medicentre", image: d1 },
-  { name: "Dr. Priya Menon",      specialization: "Gynaecology & Obstetrics",  qualification: "MBBS, MS (OBG)",               clinic: "Doctors United Medicentre", image: d2 },
-  { name: "Dr. Rajesh Nair",      specialization: "Orthopaedics",             qualification: "MBBS, MS (Ortho)",             clinic: "Doctors United Medicentre", image: d3 },
-  { name: "Dr. Sneha Pillai",     specialization: "Paediatrics",              qualification: "MBBS, MD (Paediatrics)",       clinic: "Doctors United Medicentre", image: d4 },
-  { name: "Dr. Suresh Babu",      specialization: "Cardiology",               qualification: "MBBS, DM (Cardiology)",        clinic: "Doctors United Medicentre", image: d5 },
-  { name: "Dr. Lakshmi Devi",     specialization: "Dermatology",              qualification: "MBBS, MD (Dermatology)",       clinic: "Doctors United Medicentre", image: d6 },
-  { name: "Dr. Mohan Das",        specialization: "ENT",                      qualification: "MBBS, MS (ENT)",               clinic: "Doctors United Medicentre", image: d7 },
-  { name: "Dr. Anitha George",    specialization: "Neurology",                qualification: "MBBS, DM (Neurology)",         clinic: "Doctors United Medicentre", image: d1 },
-  { name: "Dr. Vikram Rajan",     specialization: "Urology",                  qualification: "MBBS, MCh (Urology)",          clinic: "Doctors United Medicentre", image: d2 },
-  { name: "Dr. Kavitha Srinivas", specialization: "Psychiatry",               qualification: "MBBS, MD (Psychiatry)",        clinic: "Doctors United Medicentre", image: d3 },
-  { name: "Dr. Biju Thomas",      specialization: "Ophthalmology",            qualification: "MBBS, MS (Ophthalmology)",     clinic: "Doctors United Medicentre", image: d4 },
-  { name: "Dr. Reshma Krishnan",  specialization: "Endocrinology",            qualification: "MBBS, DM (Endocrinology)",     clinic: "Doctors United Medicentre", image: d5 },
+  { name: "Dr. Deepak",              image: d1  },
+  { name: "Dr. Sandeep",             image: d2  },
+  { name: "Dr. Reshmi K R",          image: d3  },
+  { name: "Dr. Sheeba",              image: d4  },
+  { name: "Dr. Nishal",              image: d5  },
+  { name: "Dr. Shanavas",            image: d6  },
+  { name: "Dr. Vineeta Rao",         image: d7  },
+  { name: "Dr. Sadanadan",           image: d8  },
+  { name: "Dr. Bijul",               image: d9  },
+  { name: "Dr. Suneeth",             image: d10 },
+  { name: "Dr. Rajesh",              image: d11 },
+  { name: "Dr. Varun",               image: d12 },
+  { name: "Dr. Saranya",             image: d13 },
+  { name: "Dr. Reshmi S",            image: d14 },
+  { name: "Dr. Adarsh",              image: d15 },
+  { name: "Dr. Thejas",              image: d17 },
+  { name: "Dr. Avinash Krishna RMO", image: d18 },
 ];
 
 // ── Services data ──────────────────────────────────────────────────────────
@@ -107,16 +123,15 @@ function DoctorsCarousel() {
       <div className="doctors-marquee">
         {items.map((doc, i) => (
           <div key={i} className="doc-card-new">
-            <div className="doc-card-new__img-wrap">
-              <img src={doc.image} alt={doc.name} className="doc-card-new__img" />
-            </div>
-            <div className="doc-card-new__body">
+            <img src={doc.image} alt={doc.name} className="doc-card-new__img" />
+            <div className="doc-card-new__overlay">
               <h3 className="doc-card-new__name">{doc.name}</h3>
-              <p className="doc-card-new__qual">{doc.qualification}</p>
-              <p className="doc-card-new__spec">
-                {doc.specialization}
-                <span className="doc-card-new__clinic"> · {doc.clinic}</span>
-              </p>
+              {doc.qualification && (
+                <p className="doc-card-new__qual">{doc.qualification}</p>
+              )}
+              {doc.specialization && (
+                <p className="doc-card-new__spec">{doc.specialization}</p>
+              )}
             </div>
           </div>
         ))}

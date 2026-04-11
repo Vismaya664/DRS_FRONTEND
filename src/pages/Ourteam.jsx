@@ -5,6 +5,7 @@ import Navbar from "../components/Navbar";
 import '../style/Ourteam.scss';
 
 const INITIAL_SHOW = 16;
+const MOBILE_SHOW  = 5;
 
 // Memoized doctor card component
 const DoctorCard = ({ doctor, onBook }) => (
@@ -48,10 +49,18 @@ export default function OurTeam() {
   const [checkedSpecs, setCheckedSpecs] = useState([]);
   const [specSearch,   setSpecSearch]   = useState("");
   const [showAllSpecs, setShowAllSpecs] = useState(false);
-  const [doctors, setDoctors] = useState([]);
-  const [departments, setDepartments] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [doctors,      setDoctors]      = useState([]);
+  const [departments,  setDepartments]  = useState([]);
+  const [loading,      setLoading]      = useState(true);
+  const [isMobile,     setIsMobile]     = useState(() => window.innerWidth <= 900);
   const navigate = useNavigate();
+
+  // Track window resize to switch between mobile/desktop spec limits
+  useEffect(() => {
+    const handler = () => setIsMobile(window.innerWidth <= 900);
+    window.addEventListener("resize", handler);
+    return () => window.removeEventListener("resize", handler);
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -81,8 +90,9 @@ export default function OurTeam() {
       s.toLowerCase().includes(specSearch.toLowerCase())
     ), [specSearch, departments]);
 
-  const visibleSpecs = showAllSpecs ? allMatchingSpecs : allMatchingSpecs.slice(0, INITIAL_SHOW);
-  const hiddenCount  = Math.max(0, allMatchingSpecs.length - INITIAL_SHOW);
+  const initialShow  = isMobile ? MOBILE_SHOW : INITIAL_SHOW;
+  const visibleSpecs = showAllSpecs ? allMatchingSpecs : allMatchingSpecs.slice(0, initialShow);
+  const hiddenCount  = Math.max(0, allMatchingSpecs.length - initialShow);
 
   const filtered = checkedSpecs.length === 0
     ? doctors

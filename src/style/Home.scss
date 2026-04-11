@@ -244,40 +244,31 @@ $orange-dark: #c43c06;
   100% { transform: translateX(-50%); }
 }
 
+// ── Doctor Card — Overlay Style ────────────────────────────────────────────
+
 .doc-card-new {
-  background: #ffffff;
+  position: relative;
+  width: 220px;
+  height: 280px;
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.08), 0 1px 4px rgba(15, 23, 42, 0.04);
-  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.28s ease;
-  width: 260px;
   flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
   cursor: pointer;
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.12);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
 
   &:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 20px 48px rgba(15, 23, 42, 0.14), 0 4px 12px rgba(15, 23, 42, 0.06);
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 48px rgba(15, 23, 42, 0.20);
 
     .doc-card-new__img {
-      transform: scale(1.06);
+      transform: scale(1.07);
     }
   }
 
   @media (max-width: 768px) {
-    width: 210px;
-  }
-}
-
-.doc-card-new__img-wrap {
-  width: 100%;
-  height: 230px;
-  overflow: hidden;
-  flex-shrink: 0;
-
-  @media (max-width: 768px) {
-    height: 185px;
+    width: 180px;
+    height: 235px;
   }
 }
 
@@ -287,23 +278,28 @@ $orange-dark: #c43c06;
   object-fit: cover;
   object-position: top center;
   display: block;
-  transition: transform 0.48s ease;
+  transition: transform 0.5s ease;
 }
 
-.doc-card-new__body {
-  padding: 18px 18px 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  flex: 1;
-  border-top: 2px solid #f1f5f9;
+.doc-card-new__overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(
+    to top,
+    rgba(10, 20, 40, 0.88) 0%,
+    rgba(10, 20, 40, 0.55) 50%,
+    transparent 100%
+  );
+  padding: 40px 14px 16px;
 }
 
 .doc-card-new__name {
   font-family: 'Nunito', sans-serif;
-  font-size: 1rem;
+  font-size: 0.93rem;
   font-weight: 800;
-  color: #0f172a;
+  color: #ffffff;
   margin: 0;
   line-height: 1.25;
   white-space: nowrap;
@@ -312,26 +308,24 @@ $orange-dark: #c43c06;
 }
 
 .doc-card-new__qual {
-  font-size: 0.78rem;
-  color: #64748b;
-  margin: 0;
-  line-height: 1.45;
-}
-
-.doc-card-new__spec {
-  font-size: 0.82rem;
-  font-weight: 700;
-  color: #16A34A;
-  margin: 2px 0 0;
-  line-height: 1.40;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.68);
+  margin: 3px 0 0;
+  line-height: 1.4;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.doc-card-new__clinic {
-  font-weight: 400;
-  color: #94a3b8;
+.doc-card-new__spec {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: rgba(134, 239, 172, 0.92);
+  margin: 4px 0 0;
+  line-height: 1.35;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 @media (max-width: 768px) {
@@ -365,20 +359,20 @@ $orange-dark: #c43c06;
 }
 
 .story-img-col {
-  flex: 0 0 640px;
-  max-width: 640px;
+  flex: 0 0 720px;          // ← increased from 640px
+  max-width: 720px;         // ← increased from 640px
   display: flex;
   align-items: center;
   justify-content: flex-end;
 
   @media (max-width: 1024px) {
-    flex: 0 0 460px;
-    max-width: 460px;
+    flex: 0 0 520px;        // ← increased from 460px
+    max-width: 520px;       // ← increased from 460px
   }
 
   @media (max-width: 860px) {
     flex: unset;
-    max-width: 380px;
+    max-width: 440px;       // ← increased from 380px
     width: 100%;
     margin: 0 auto;
     justify-content: center;
@@ -386,7 +380,7 @@ $orange-dark: #c43c06;
 }
 
 .story-img {
-  width: 95%;
+  width: 100%;              // ← increased from 95%
   height: auto;
   display: block;
   object-fit: contain;
