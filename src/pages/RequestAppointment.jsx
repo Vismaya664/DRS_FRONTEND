@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+ import { useState, useRef, useEffect, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getAllDoctors, getDepartments, bookAppointment, getDoctorSlots } from "../api/api";
 import Navbar from "../components/Navbar";

@@ -4,6 +4,7 @@ import Home from './pages/Home'
 import AdminDashboard from './pages/Admindashboard'
 import AdminAppointment from './pages/Adminappointment'
 import Admindoctors from './pages/Admindoctors'
+import AdminSlotManagement from './pages/AdminSlotManagement'
 import BookAppointment from './pages/BookAppoinment'
 import DoctorDashboard from './pages/Doctorsdashboard/Dashboard'
 import DoctorAppointments from './pages/Doctorsdashboard/Appointments'
@@ -34,6 +35,7 @@ function App() {
         <Route path="/admin/dashboard"         element={<AdminDashboard />} />
         <Route path="/admin/appointments"      element={<AdminAppointment />} />
         <Route path="/admin/doctors"           element={<Admindoctors />} />
+        <Route path="/admin/slot-management"   element={<AdminSlotManagement />} />
 
         {/* Doctor pages */}
         <Route path="/doctor/dashboard"        element={<DoctorDashboard />} />

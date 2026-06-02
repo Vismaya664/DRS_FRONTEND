@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { getAdminAppointments, updateAppointmentStatus, deleteAppointment, getAllDoctors, getDepartments, bookAppointment, getDoctorSlots } from '../api/api'
+import { getAdminAppointments, updateAppointmentStatus, deleteAppointment, getAllDoctors, getDepartments, bookAppointment, getDoctorSlots, adminUnblockSlots } from '../api/api'
 import Sidebar from '../components/Sidebar'
 import '../style/Adminappointment.scss'
 
@@ -84,8 +84,8 @@ function AdminSlotModal({ groups, onConfirm, onClose, appointmentDate }) {
   const switchGroup = slno => { setActiveGroup(slno); setSelectedKey(null) }
 
   const pickSlot = s => {
-    if (s.status === 'Booked') return
-    // Admin can book any available slot, no 1-hour restriction
+    if (s.status === 'Booked' && !s.is_blocked) return  // patient-booked: cannot select
+    // Admin can select available slots AND admin-blocked slots
     setSelectedKey(`${s.slot_number}_${s.start_time}`)
   }
 
@@ -95,6 +95,7 @@ function AdminSlotModal({ groups, onConfirm, onClose, appointmentDate }) {
       slot_number: selectedSlot.slot_number,
       start_time:  selectedSlot.start_time,
       end_time:    selectedSlot.end_time,
+      is_blocked:  !!selectedSlot.is_blocked,   // pass through so handleSubmit can unblock first
       display:     `${formatTime(selectedSlot.start_time)} – ${formatTime(selectedSlot.end_time)}`,
     })
     onClose()
@@ -141,14 +142,15 @@ function AdminSlotModal({ groups, onConfirm, onClose, appointmentDate }) {
         {/* Session tabs */}
         <div className="ap-slot-tabs">
           {groups.map(g => {
-            const vacantCount = g.slots.filter(s => s.status !== 'Booked').length
+            // Admin can book: vacant slots + admin-blocked slots
+            const bookableCount = g.slots.filter(s => s.status === 'Vacant' || (s.status === 'Booked' && s.is_blocked)).length
             return (
               <button key={g.slno} type="button"
                 className={`ap-slot-tab ${activeGroup === g.slno ? "ap-slot-tab--active" : ""}`}
                 onClick={() => switchGroup(g.slno)}>
                 <span className="ap-slot-tab__label">{g.label}</span>
                 <span className="ap-slot-tab__time">{g.timeRange}</span>
-                <span className="ap-slot-tab__count">{vacantCount} available</span>
+                <span className="ap-slot-tab__count">{bookableCount} available</span>
               </button>
             )
           })}
@@ -158,28 +160,37 @@ function AdminSlotModal({ groups, onConfirm, onClose, appointmentDate }) {
           <div className="ap-slot-legend">
             <span className="ap-legend__item"><span className="ap-legend__dot ap-legend__dot--open"/> Available</span>
             <span className="ap-legend__item"><span className="ap-legend__dot ap-legend__dot--sel"/> Selected</span>
+            <span className="ap-legend__item"><span className="ap-legend__dot ap-legend__dot--blocked"/> Blocked</span>
             <span className="ap-legend__item"><span className="ap-legend__dot ap-legend__dot--booked"/> Booked</span>
           </div>
 
           <div className="ap-slot-grid" ref={slotGridRef}>
             {currentGroup?.slots.map(s => {
-              const key        = `${s.slot_number}_${s.start_time}`
-              const isBooked   = s.status === 'Booked'
-              const isSelected = selectedKey === key
-              
+              const key             = `${s.slot_number}_${s.start_time}`
+              const isBooked        = s.status === 'Booked'
+              const isAdminBlocked  = isBooked && s.is_blocked      // blocked by admin — selectable
+              const isPatientBooked = isBooked && !s.is_blocked     // real patient booking — not selectable
+              const isSelected      = selectedKey === key
+
               return (
                 <button key={key} type="button"
-                  disabled={isBooked}
+                  disabled={isPatientBooked}
                   onClick={() => pickSlot(s)}
                   className={[
                     "ap-slot-chip",
-                    isBooked   ? "ap-slot-chip--booked"   : "",
-                    isSelected ? "ap-slot-chip--selected"  : "",
+                    isAdminBlocked  ? "ap-slot-chip--blocked"  : "",
+                    isPatientBooked ? "ap-slot-chip--booked"   : "",
+                    isSelected      ? "ap-slot-chip--selected" : "",
                   ].join(" ").trim()}
-                  title={isBooked ? "This slot is booked" : ""}>
+                  title={
+                    isAdminBlocked  ? "Blocked by admin — click to book this slot" :
+                    isPatientBooked ? "Booked by a patient — cannot modify" : ""
+                  }>
                   <span className="ap-slot-chip__time">{formatTime(s.start_time)}</span>
                   <span className="ap-slot-chip__label">
-                    {isBooked ? "Booked" : isSelected ? "Selected" : "Available"}
+                    {isSelected      ? "Selected" :
+                     isAdminBlocked  ? "Blocked"  :
+                     isPatientBooked ? "Booked"   : "Available"}
                   </span>
                 </button>
               )
@@ -298,8 +309,11 @@ export default function AdminAppointment() {
           const dateObj = apt.appointment_date ? new Date(apt.appointment_date) : null
           const formattedDate = dateObj ? `${dateObj.getDate()}/${dateObj.getMonth() + 1}/${dateObj.getFullYear()}` : 'N/A'
           
+          // apt.id is the database primary key — ensure it's a plain integer
+          const dbId = typeof apt.id === 'number' ? apt.id : parseInt(String(apt.id), 10)
+
           return {
-            id: index + 1,  // Sequential ID: 1, 2, 3...
+            id: index + 1,  // Sequential display ID: 1, 2, 3...
             patient: apt.patient_name || 'Unknown',
             phone: apt.phone_number || 'N/A',
             doctor: apt.doctor_name || apt.doctor_code || 'Unknown',
@@ -308,7 +322,7 @@ export default function AdminAppointment() {
             time: apt.appointment_time_range || (apt.appointment_date ? new Date(apt.appointment_date).toLocaleTimeString() : 'N/A'),
             status: apt.status || 'pending',
             type: 'Consultation',
-            rawId: apt.id  // Keep original ID for API calls
+            rawId: dbId  // Database PK — used for API calls (update/delete)
           }
         })
         
@@ -460,7 +474,7 @@ export default function AdminAppointment() {
       slot_number: selectedSlotData.slot_number
     }
 
-    bookAppointment(payload)
+    const doBook = () => bookAppointment(payload)
       .then(res => {
         const apt = res.appointment
         const dateObj = apt.appointment_date ? new Date(apt.appointment_date) : null
@@ -489,6 +503,24 @@ export default function AdminAppointment() {
           alert(msg)
         }
       })
+
+    // If the selected slot was admin-blocked, remove the block sentinel first,
+    // then create the real appointment. This converts "Blocked" → "Booked".
+    if (selectedSlotData.is_blocked) {
+      adminUnblockSlots({
+        doctor_code: form.doctor,
+        date: form.date,
+        slots: [{ start_time: selectedSlotData.start_time, slot_number: selectedSlotData.slot_number }],
+      })
+        .then(() => doBook())
+        .catch(err => {
+          console.error('Failed to unblock slot before booking:', err)
+          // Even if unblock fails (race condition), attempt the booking anyway
+          doBook()
+        })
+    } else {
+      doBook()
+    }
   }
 
   // ── status change ────────────────────────────────────────────────────────────

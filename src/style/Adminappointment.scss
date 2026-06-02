@@ -1242,11 +1242,18 @@ $sh3:   0 8px 24px rgba(0,0,0,.14);
   }
 
   &--sel {
-    background: #FCA5A5;
+    background: #BBF7D0;
+    border: 1px solid #86EFAC;
+  }
+
+  &--blocked {
+    background: #FEF3C7;
+    border: 1px solid #FCD34D;
   }
 
   &--booked {
-    background: #FCA5A5;
+    background: #FECACA;
+    border: 1px solid #F87171;
   }
 
   &--soon {
@@ -1347,6 +1354,29 @@ $sh3:   0 8px 24px rgba(0,0,0,.14);
 
     .ap-slot-chip__label {
       color: #DC2626;
+    }
+  }
+
+  // Admin-blocked state — amber, distinct from patient-booked
+  &--blocked {
+    border-color: #FCD34D;
+    background: #FFFBEB;
+    color: #92400E;
+    cursor: pointer;
+
+    .ap-slot-chip__time {
+      color: #92400E;
+    }
+
+    .ap-slot-chip__label {
+      color: #B45309;
+    }
+
+    &:hover {
+      border-color: #F59E0B;
+      background: #FEF3C7;
+      box-shadow: 0 4px 12px rgba(245,158,11,.20);
+      transform: translateY(-1px);
     }
   }
 }

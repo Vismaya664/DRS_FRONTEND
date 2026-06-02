@@ -34,6 +34,16 @@ const navItems = [
     id: 'doctors',
     path: '/admin/Doctors',
   },
+  {
+    icon: (
+      <svg viewBox="0 0 20 20" fill="currentColor" width="18" height="18">
+        <path d="M5 3a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2V5a2 2 0 00-2-2H5zm9 4a1 1 0 100-2 1 1 0 000 2zm0 2a1 1 0 11-2 0 1 1 0 012 0zm0 4a1 1 0 100-2 1 1 0 000 2zm2-6a1 1 0 11-2 0 1 1 0 012 0zm0 2a1 1 0 100-2 1 1 0 000 2zm0 4a1 1 0 11-2 0 1 1 0 012 0zm2-6a1 1 0 100-2 1 1 0 000 2zm0 2a1 1 0 11-2 0 1 1 0 012 0zm0 4a1 1 0 100-2 1 1 0 000 2z" />
+      </svg>
+    ),
+    label: 'Slot Management',
+    id: 'slot-management',
+    path: '/admin/slot-management',
+  },
 ]
 
 export default function Sidebar() {

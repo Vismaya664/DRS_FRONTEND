@@ -143,18 +143,43 @@ export const getDoctorAppointments = async (doctorCode) => {
 
 export const updateAppointmentStatus = async (appointmentId, status) => {
   await initializeCSRF();
-  const { data } = await api.patch(`/admin/appointments/${appointmentId}/status`, { status });
+  // Ensure appointmentId is a clean integer, not a compound string
+  const safeId = parseInt(String(appointmentId), 10);
+  if (isNaN(safeId)) throw new Error(`Invalid appointment ID: ${appointmentId}`);
+  const { data } = await api.patch(`/admin/appointments/${safeId}/status`, { status });
   return data;
 };
 
 export const deleteAppointment = async (appointmentId) => {
   await initializeCSRF();
-  const { data } = await api.delete(`/admin/appointments/${appointmentId}/delete`);
+  // Ensure appointmentId is a clean integer, not a compound string
+  const safeId = parseInt(String(appointmentId), 10);
+  if (isNaN(safeId)) throw new Error(`Invalid appointment ID: ${appointmentId}`);
+  const { data } = await api.delete(`/admin/appointments/${safeId}/delete`);
   return data;
 };
 
 export const getDoctorSlots = async ({ doctor_code, date }) => {
   const { data } = await api.get('/slots/', { params: { doctor_code, date } });
+  return data;
+};
+
+export const adminCreateAppointment = async (payload) => {
+  await initializeCSRF();
+  const { data } = await api.post('/admin/create-appointment', payload);
+  return data;
+};
+
+// ─── Slot Blocking (Admin) ────────────────────────────────────────────────────
+export const adminBlockSlots = async (payload) => {
+  await initializeCSRF();
+  const { data } = await api.post('/admin/block-slots', payload);
+  return data;
+};
+
+export const adminUnblockSlots = async (payload) => {
+  await initializeCSRF();
+  const { data } = await api.delete('/admin/block-slots', { data: payload });
   return data;
 };
 
