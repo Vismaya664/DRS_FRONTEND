@@ -299,7 +299,7 @@ export default function AdminAppointment() {
         // Sort appointments by creation date (newest first)
         const sortedApts = appointmentsData.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
         
-        const mappedApts = sortedApts.map((apt) => {
+        const mappedApts = sortedApts.map((apt, index) => {
           const dateObj = apt.appointment_date ? new Date(apt.appointment_date) : null
           const formattedDate = dateObj ? `${dateObj.getDate()}/${dateObj.getMonth() + 1}/${dateObj.getFullYear()}` : 'N/A'
           
@@ -307,12 +307,7 @@ export default function AdminAppointment() {
           const dbId = typeof apt.id === 'number' ? apt.id : parseInt(String(apt.id), 10)
 
           return {
-<<<<<<< HEAD
             id: index + 1,  // Sequential display ID: 1, 2, 3...
-=======
-            // Use rawId as the stable internal key; display number comes from filtered index
-            id: apt.id,
->>>>>>> 6336f43ab5cfa9359a24c71dc978ebd5aab45d2f
             patient: apt.patient_name || 'Unknown',
             phone: apt.phone_number || 'N/A',
             doctor: apt.doctor_name || apt.doctor_code || 'Unknown',
