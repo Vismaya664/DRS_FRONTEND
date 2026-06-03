@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./Navbar.scss";
-import logoImage from "../assets/logo.jpg";
+import logoImage from "../assets/Logo.jpg";
 
 const NAV_LINKS = [
   { label: "Homepage",   to: "/" },
