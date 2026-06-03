@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { adminLogin, doctorLogin } from "../api/api";
 import "../style/Login.scss";
 import loginImage from "../assets/Loginpage.jpg";
-import logoImage from "../assets/Logo.jpg";
+import logoImage from "../assets/logo.jpg";
 
 // Role-based config — title and portal label per role
 const ROLE_CONFIG = {

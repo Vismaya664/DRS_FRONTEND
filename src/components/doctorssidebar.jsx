@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./doctorssidebar.scss";
 
-import logoImg from "../assets/Logo.jpg";
+import logoImg from "../assets/logo.jpg";
 
 // ── Icons ─────────────────────────────────────────────────────────
 function DashIcon() {

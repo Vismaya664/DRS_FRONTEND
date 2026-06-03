@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import "./Footer.scss";
-import logoImage from "../assets/Logo.jpg";
+import logoImage from "../assets/logo.jpg";
 
 const SOCIALS = [
   {

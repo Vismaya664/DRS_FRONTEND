@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import './Sidebar.scss'
-import logoImage from '../assets/Logo.jpg'
+import logoImage from '../assets/logo.jpg'
 
 const navItems = [
   {
