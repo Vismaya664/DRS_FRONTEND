@@ -100,7 +100,7 @@ export default function Footer() {
               <circle cx="12" cy="12" r="10"/>
               <polyline points="12 6 12 12 16 14"/>
             </svg>
-            <span>Mon–Sat: 7:00 AM – 8:00 PM &nbsp;·&nbsp; Sun: 8:00 AM – 7:00 PM</span>
+            <span>Mon–Sun: 7:00 AM – 10:00 PM</span>
           </div>
 
         </div>
