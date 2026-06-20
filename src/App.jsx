@@ -10,41 +10,44 @@ import DoctorDashboard from './pages/Doctorsdashboard/Dashboard'
 import DoctorAppointments from './pages/Doctorsdashboard/Appointments'
 import OurTeam from './pages/Ourteam'
 import RequestAppointment from './pages/RequestAppointment'
+import LicenseGate from './components/LicenseGate'
 
-function App() {     
+function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* Public patient-facing home */}
-        <Route path="/"                        element={<Home />} />
- 
-        {/* Our Team page */}
-        <Route path="/our-team"                element={<OurTeam />} />
+    <LicenseGate>
+      <BrowserRouter>
+        <Routes>
+          {/* Public patient-facing home */}
+          <Route path="/"                        element={<Home />} />
 
-        {/* Book an appointment */}
-        <Route path="/book-appointment"        element={<BookAppointment />} />
+          {/* Our Team page */}
+          <Route path="/our-team"                element={<OurTeam />} />
 
-        {/* Request an appointment */}
-        <Route path="/request-appointment"     element={<RequestAppointment />} />
+          {/* Book an appointment */}
+          <Route path="/book-appointment"        element={<BookAppointment />} />
 
-        {/* Staff portals */}
-        <Route path="/login/doctor"            element={<Login role="DOCTOR" />} />
-        <Route path="/login/admin"             element={<Login role="ADMIN" />} />
+          {/* Request an appointment */}
+          <Route path="/request-appointment"     element={<RequestAppointment />} />
 
-        {/* Admin pages */}
-        <Route path="/admin/dashboard"         element={<AdminDashboard />} />
-        <Route path="/admin/appointments"      element={<AdminAppointment />} />
-        <Route path="/admin/doctors"           element={<Admindoctors />} />
-        <Route path="/admin/slot-management"   element={<AdminSlotManagement />} />
+          {/* Staff portals */}
+          <Route path="/login/doctor"            element={<Login role="DOCTOR" />} />
+          <Route path="/login/admin"             element={<Login role="ADMIN" />} />
 
-        {/* Doctor pages */}
-        <Route path="/doctor/dashboard"        element={<DoctorDashboard />} />
-        <Route path="/doctor/appointments"     element={<DoctorAppointments />} />
+          {/* Admin pages */}
+          <Route path="/admin/dashboard"         element={<AdminDashboard />} />
+          <Route path="/admin/appointments"      element={<AdminAppointment />} />
+          <Route path="/admin/doctors"           element={<Admindoctors />} />
+          <Route path="/admin/slot-management"   element={<AdminSlotManagement />} />
 
-        {/* Fallback */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </BrowserRouter>
+          {/* Doctor pages */}
+          <Route path="/doctor/dashboard"        element={<DoctorDashboard />} />
+          <Route path="/doctor/appointments"     element={<DoctorAppointments />} />
+
+          {/* Fallback */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </BrowserRouter>
+    </LicenseGate>
   )
 }
 
